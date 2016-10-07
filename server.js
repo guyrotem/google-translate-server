@@ -1,11 +1,11 @@
-var requestHandler = require('./scripts/request-handler.js')
-
 var http = require('http');
-const PORT=8080; 
+var loadConfig = require('./utils/load-config.js');
+var requestHandler = require('./scripts/request-handler.js');
 
 var server = http.createServer(requestHandler);
+var config = loadConfig();
 
-server.listen(PORT, function(){
+server.listen(config.port, function() {
     //Callback triggered when server is successfully listening. Hurray!
-    console.log("Server listening on: http://localhost:%s", PORT);
+    console.log("Server listening on: http://localhost:%s", config.port);
 });

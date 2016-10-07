@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "phantom": "^2.1.21",
     "querystring": "^0.2.0",
     "request": "^2.75.0",
     "request-promise": "^4.1.1"
