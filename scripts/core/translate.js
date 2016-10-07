@@ -1,6 +1,7 @@
 var request = require('request-promise');
 var querystring = require('querystring');
 var extend = require('extend');
+var fs = require('fs');
 
 var tkCalc = require('./tk-hash.js');
 var tkkScraper = require('./tkk-scraper.js');
@@ -59,9 +60,7 @@ function refreshTkk() {
 }
 
 function loadLanguages() {
-	var fs = require('fs');
-    var obj;
-    fs.readFile('scripts/core/languages.json', 'utf8', function (err, data) {
+    fs.readFile('json/languages.json', 'utf8', function (err, data) {
       if (err) {
       	throw err;
       } else {

@@ -15,7 +15,8 @@ var responseProcessor = (googleStringResponse) => {
 			actualQuery: gtHeader[0][1],
 			resultType: gtHeader[0].reverse()[0],	//	5th item
 			transliteration: getTransliteration(gtHeader[1]),
-			synonyms: getSynonyms(parsed[1])
+			synonyms: getSynonyms(parsed[1]),
+			sourceLanguage: parsed[2]
 		},
 		originalResponse: "\"" + googleStringResponse + "\""
 	};

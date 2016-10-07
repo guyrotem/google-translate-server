@@ -3,6 +3,9 @@ var googleResponseProcessor = require('./core/google-response-processor.js');
 
 //We need a function which handles requests and send response
 function handleRequest(request, response) {
+
+  console.log('Got request for URL: ' + request.url);
+
   if(request.url === '/translate' && request.method === "POST") {
       var requestBody = '';
 

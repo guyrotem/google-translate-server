@@ -37,11 +37,11 @@
 	},
 	{
 	  "name": "Bosnian",
-	  "code": "bo"
+	  "code": "bs"
 	},
 	{
 	  "name": "Bulgarian",
-	  "code": "bu"
+	  "code": "bg"
 	},
 	{
 	  "name": "Catalan",
@@ -49,7 +49,7 @@
 	},
 	{
 	  "name": "Cebuano",
-	  "code": "ce"
+	  "code": "ceb"
 	},
 	{
 	  "name": "Chichewa",
@@ -65,7 +65,7 @@
 	},
 	{
 	  "name": "Croatian",
-	  "code": "cr"
+	  "code": "hr"
 	},
 	{
 	  "name": "Czech",
@@ -149,7 +149,7 @@
 	},
 	{
 	  "name": "Hmong",
-	  "code": "hm"
+	  "code": "hmn"
 	},
 	{
 	  "name": "Hungarian",
@@ -165,7 +165,7 @@
 	},
 	{
 	  "name": "Indonesian",
-	  "code": "in"
+	  "code": "id"
 	},
 	{
 	  "name": "Irish",
@@ -193,7 +193,7 @@
 	},
 	{
 	  "name": "Khmer",
-	  "code": "kh"
+	  "code": "km"
 	},
 	{
 	  "name": "Korean",
@@ -225,7 +225,7 @@
 	},
 	{
 	  "name": "Luxembourgish",
-	  "code": "lu"
+	  "code": "lx"
 	},
 	{
 	  "name": "Macedonian",
@@ -257,7 +257,7 @@
 	},
 	{
 	  "name": "Mongolian",
-	  "code": "mo"
+	  "code": "mn"
 	},
 	{
 	  "name": "Myanmar (Burmese)",
@@ -273,11 +273,11 @@
 	},
 	{
 	  "name": "Pashto",
-	  "code": "pa"
+	  "code": "ps"
 	},
 	{
 	  "name": "Persian",
-	  "code": "pe"
+	  "code": "fa"
 	},
 	{
 	  "name": "Polish",
@@ -301,7 +301,7 @@
 	},
 	{
 	  "name": "Samoan",
-	  "code": "sa"
+	  "code": "sm"
 	},
 	{
 	  "name": "Scots Gaelic",
