@@ -1,0 +1,31 @@
+{
+  "dependencies": {
+    "querystring": "^0.2.0",
+    "request": "^2.75.0",
+    "request-promise": "^4.1.1"
+  },
+  "description": "GT4",
+  "devDependencies": {
+    "eslint": "^2.5.3"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "main": "scripts/server.js",
+  "name": "google-translate-api",
+  "readme": "ERROR: TODO write a readme!",
+  "scripts": {
+    "lint": "eslint lib/ *.js tests/ && echo Lint passed.",
+    "test": "npm run lint && npm run test-ci && npm run test-browser",
+    "test-browser": "node tests/browser/start.js",
+    "test-ci": "taper tests/test-*.js",
+    "test-cov": "istanbul cover tape tests/test-*.js"
+  },
+  "tags": [
+    "google",
+    "translate",
+    "free api",
+    "utility"
+  ],
+  "version": "2.75.0"
+}
