@@ -1,3 +1,4 @@
 {
-	"port": 9333
+	"port": 9333,
+	"isProduction": false
 }

@@ -12,4 +12,4 @@ function loadPrivateConfig(filePath) {
 	}
 }
 
-module.exports = extend.bind({}, publicConfig, privateConfig);
+module.exports = extend.bind(null, publicConfig, privateConfig);
