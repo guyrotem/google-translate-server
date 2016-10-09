@@ -69,8 +69,10 @@ Make sure you have npm properly installed.
 2.	_npm install_
 3.	_npm start_
 
-To change server settings, modify [conf.json](https://github.com/guyrotem/google-translate-server/blob/master/conf/config.json) (or .private) file(s).
-Set "isProduction"=false to work with mock data (otherwise requests will be proxied to Google).
+You may also work in test mode, where translation system is mocked by the data contained in [data.json](https://github.com/guyrotem/google-translate-server/blob/master/test/data.json) file.
+`npm run-script start-mocks`
+In this mode, no requests will be sent to Google, but it uses the same "production" code to extract the TKK and send queries (useful for IT tests).
+It currently only supports the queries "dog" and "cat", in French, Spanish, German and Hebrew, but you may modify the data file for more :).
 
 ## Sample client using this API
 
