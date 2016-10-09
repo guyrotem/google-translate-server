@@ -6,7 +6,7 @@ var getPostPayload = require('./core/get-post-payload.js');
 var server = http.createServer(requestHandler);
 
 function startServer() {
-	var port = process.env.npm_package_config_port || 9333;
+	var port = process.env.PORT || 9333;
 	
 	server.listen(port, function () {
 	    console.log(`Server listening on: ${port}`);
