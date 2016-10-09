@@ -1,5 +1,5 @@
 var extend = require('extend');
-var configBaseDir = './../conf';
+var configBaseDir = './../../conf';
 
 var publicConfig = require(configBaseDir + '/config.json');
 var privateConfig = loadPrivateConfig(configBaseDir + '/config.private.json');

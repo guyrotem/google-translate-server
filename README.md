@@ -22,13 +22,13 @@ The API result is made of arrays of arrays (like a JSON that was stripped out of
 
 **This proxy API does all that for you!**
 
-_"/translate"_
+_/translate_
 
 INPUT: 
 ```
 {
 	query: String,
-	sourceLang: String,	//	2 or 3 letters, _usually_ the ISO2 language code
+	sourceLang: String,	//	2 or 3 letters, _usually_ the ISO2 language code, small case
 	targetLang: String  //	...
 }
 ```
@@ -38,7 +38,7 @@ OUTPUT
 {
 	extract: {
 		translation: String,
-		actualQuery: String, //	best match for query (mostly == query, unless there was a type)
+		actualQuery: String, //	best match for query (should be the same as the query, unless there was a typo)
 		resultType: Int, //	index of Google's response format
 		transliteration: String, //	transliteration of the word in latin alphabet (partially available)
 		synonyms: Array[String]	 //	full-query alternative suggestions (only available for short queries)
@@ -47,7 +47,7 @@ OUTPUT
 }
 ```
 
-_"/languages"_
+_/languages_
 
 OUTPUT
 an array of all available languages, with names and their appropriate codes:

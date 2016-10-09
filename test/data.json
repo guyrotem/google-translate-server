@@ -1,0 +1,49 @@
+{
+	"tkk": "123456.8492358",
+	"entries": [
+		{
+			"query": "dog",
+			"translation": "chien",
+			"language": "fr",
+			"synonyms": ["mâle", "fille moche"]
+		},
+		{
+			"query": "dog",
+			"translation": "perro",
+			"language": "es"
+		},
+		{
+			"query": "dog",
+			"translation": "Hund",
+			"language": "de"
+		},
+		{
+			"query": "dog",
+			"translation": "כלב",
+			"transliteration": "kelev",
+			"language": "iw"
+		},
+		{
+			"query": "cat",
+			"translation": "chat",
+			"language": "fr"
+		},
+		{
+			"query": "cat",
+			"translation": "gato",
+			"language": "es"
+		},
+		{
+			"query": "cat",
+			"translation": "Katze",
+			"language": "de",
+			"synonyms": ["Raubkatze"]
+		},
+		{
+			"query": "cat",
+			"translation": "חתול",
+			"transliteration": "hatul",
+			"language": "iw"
+		}
+	]
+}

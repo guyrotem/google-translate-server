@@ -1,9 +1,15 @@
 {
   "dependencies": {
+    "copy": "^0.3.0",
+    "fs-promise": "^0.5.0",
     "phantom": "^2.1.21",
+    "q": "^1.4.1",
     "querystring": "^0.2.0",
     "request": "^2.75.0",
     "request-promise": "^4.1.1"
+  },
+  "config": {
+    "port": 9333
   },
   "description": "GT4",
   "devDependencies": {
@@ -16,6 +22,7 @@
   "name": "google-translate-api",
   "readme": "ERROR: TODO write a readme!",
   "scripts": {
+    "start-mocks": "node test/start-mock.js",
     "lint": "eslint lib/ *.js tests/ && echo Lint passed.",
     "test": "npm run lint && npm run test-ci && npm run test-browser",
     "test-browser": "node tests/browser/start.js",

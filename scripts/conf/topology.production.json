@@ -1,0 +1,6 @@
+{
+	"externalApis": {
+		"googleTranslateApi": "https://translate.google.com/translate_a/single",
+		"googleTranslateWebpage": "https://translate.google.com/"
+	}
+}

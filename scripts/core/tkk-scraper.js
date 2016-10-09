@@ -2,8 +2,10 @@ var phantom = require('phantom');
 
 var tkkScraper = function () {
 	//return '409846.1881405758';
-
-	var	pageUrl = 'https://translate.google.com/';
+	var topology = require('./topology-manager').readTopology();
+	
+	var	pageUrl = topology.externalApis.googleTranslateWebpage;
+	console.log(topology);
 	var sitepage;
 
 	return phantom.create(['--ignore-ssl-errors=yes', '--load-images=no', '--ssl-protocol=any'])
@@ -32,5 +34,3 @@ var tkkScraper = function () {
 module.exports = {
 	run: tkkScraper
 };
-
-// tkkScraper();

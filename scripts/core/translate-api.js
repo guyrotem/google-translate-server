@@ -1,16 +1,18 @@
 var request = require('request-promise');
 var querystring = require('querystring');
 var extend = require('extend');
-var fs = require('fs');
+var fs = require('fs-promise');
+var q = require('q');
 
-var tkCalc = require('./tk-hash.js');
-var tkkScraper = require('./tkk-scraper.js');
+var tkCalc = require('./../hash/tk-hash');
+var tkkScraper = require('./tkk-scraper');
+var externalApis = () => require('./topology-manager').readTopology().externalApis;
 
 var tkk = null;
 var languagesList = null;
 
 var submitToGoogle = function (data) {
-	var translateUrl = 'https://translate.google.com/translate_a/single'
+	var translateUrl = externalApis().googleTranslateApi;
 	var queryParams = extend({
 		client: 't',
 		hl: 'en',
@@ -25,18 +27,21 @@ var submitToGoogle = function (data) {
 
 	var fullUrl = translateUrl + '?' + querystring.stringify(queryParams);
 
-	return request(fullUrl);
+	return request(fullUrl)
+			.catch(res => {
+				return q.reject(res.error);
+			});
 }
 
-var handleClientRequest = function (requestData) {
+function preSubmit(requestData) {
 
 	console.log(requestData);
 
-	if (!isReady()) {
-		throw new Error("Server not initialized!");
+	if (!requestData.query || !requestData.sourceLang || !requestData.targetLang) {
+		return q.reject('Request data is incomplete');
 	}
 
-	var query = requestData.query || '';
+	var query = requestData.query;
 	var sourceLang = requestData.sourceLang;
 	var targetLang = requestData.targetLang;
 	var tk = tkCalc(query, tkk);
@@ -52,7 +57,7 @@ var handleClientRequest = function (requestData) {
 }
 
 function refreshTkk() {
-	tkkScraper.run()
+	return tkkScraper.run()
 		.then(res => {
 			console.log('Key retrieved ' + res);
 			tkk = res;
@@ -60,29 +65,25 @@ function refreshTkk() {
 }
 
 function loadLanguages() {
-    fs.readFile('json/languages.json', 'utf8', function (err, data) {
-      if (err) {
-      	throw err;
-      } else {
+    return fs.readFile('json/languages.json', 'utf8')
+    .then(data => {
       	languagesList = JSON.parse(data);
       	console.log('Loaded ' + languagesList.length + ' languages');
-      }
     });
 }
 
 function isReady() { return tkk !== null && languagesList !== null; }
 
 function initServer() {
-	refreshTkk();
-	loadLanguages();
+	return q.all([refreshTkk(), loadLanguages()]);
 }
-
-initServer();
 
 setInterval(refreshTkk, 30 * 60 * 1000);
 
 module.exports = {
-	submit: handleClientRequest,
+	//	@PreRequisite: isReady() === true
+	start: initServer,
+	submit: preSubmit,
 	getLanguagesList: () => languagesList,
 	isReady: isReady
 }

@@ -1,0 +1,6 @@
+{
+	"externalApis": {
+		"googleTranslateApi": "http://localhost:9444",
+		"googleTranslateWebpage": "http://localhost:9445/"
+	}
+}
