@@ -2,6 +2,8 @@
 
 NodeJS proxy for Google Translate
 
+### [See demo here](https://google-translate-client.herokuapp.com/)
+
 ## ¡¿ Why do I need a proxy ?!
 
 Can't I just call the API used by Google Translate?
@@ -24,18 +26,23 @@ The API result is made of arrays of arrays (like a JSON that was stripped out of
 
 _/translate_
 
+translate a query into multiple languages simultaneously.
+
 INPUT: 
 ```
 {
 	query: String,
 	sourceLang: String,	//	2 or 3 letters, _usually_ the ISO2 language code, small case
-	targetLang: String  //	...
+	targetLangs: String[]  //	...
 }
 ```
 
+you may use sourceLang: "auto" to let Google choose for you
+
 OUTPUT
 ```
-{
+[
+ {
 	extract: {
 		translation: String,
 		actualQuery: String, //	best match for query (should be the same as the query, unless there was a typo)
@@ -44,7 +51,9 @@ OUTPUT
 		synonyms: Array[String]	 //	full-query alternative suggestions (only available for short queries)
 	},
 	originalResponse: String  //	the original response returned from Google's API as a string
-}
+ },
+ { ... }
+]
 ```
 
 _/languages_
