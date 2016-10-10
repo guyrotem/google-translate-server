@@ -22,7 +22,7 @@
   "name": "google-translate-api",
   "readme": "Readme.md",
   "scripts": {
-    "start-mocks": "node test/start-mock.js",
+    "simulation": "node test/start-mock.js",
     "lint": "eslint lib/ *.js tests/ && echo Lint passed.",
     "test": "npm run lint && npm run test-ci && npm run test-browser",
     "test-browser": "node tests/browser/start.js",

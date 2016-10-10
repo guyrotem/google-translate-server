@@ -1,5 +1,6 @@
 {
 	"externalApis": {
+		"clientBaseDomain": "https://google-translate-client.herokuapp.com",
 		"googleTranslateApi": "https://translate.google.com/translate_a/single",
 		"googleTranslateWebpage": "https://translate.google.com/"
 	}
