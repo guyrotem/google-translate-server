@@ -17,7 +17,7 @@ function dispatcher(url, requestBody) {
     return translateAPI.submit(data);
   } else if (url === '/languages') {
     var langs = translateAPI.getLanguagesList();
-    resolveWithData(langs); //  sync 2 async
+    return resolveWithData(langs); //  sync 2 async
   } else {
     return q.reject(`Unknown URL: ${url}`);
   }
