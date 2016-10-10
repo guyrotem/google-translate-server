@@ -17,7 +17,7 @@ function startServer() {
 
 function requestHandler(request, response) {
 	try {
-  		response.setHeader("Access-Control-Allow-Origin", "*");
+  		response.setHeader("Access-Control-Allow-Origin", "https://google-translate-client.herokuapp.com");
   		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
 		if (request.method === 'POST') {
