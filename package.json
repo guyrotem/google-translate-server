@@ -20,7 +20,7 @@
   },
   "main": "scripts/server.js",
   "name": "google-translate-api",
-  "readme": "ERROR: TODO write a readme!",
+  "readme": "Readme.md",
   "scripts": {
     "start-mocks": "node test/start-mock.js",
     "lint": "eslint lib/ *.js tests/ && echo Lint passed.",
