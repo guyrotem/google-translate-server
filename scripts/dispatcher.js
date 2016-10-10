@@ -1,6 +1,5 @@
 var q = require('q');
 var translateAPI = require('./core/translate-api.js');
-var googleResponseProcessor = require('./core/google-response-processor.js');
 var getPostPayload = require('./core/get-post-payload.js');
 
 //We need a function which handles requests and send response
@@ -14,21 +13,20 @@ function dispatcher(url, requestBody) {
 
   var data = JSON.parse(requestBody);
 
-  if(url === '/translate') {
-    return translateAPI.submit(data)
-      .then(function (responseAsString) {
-        var jsonData = googleResponseProcessor(responseAsString);
-        console.log(jsonData.extract.translation);
-        return jsonData;
-      });
+  if (url === '/translate') {
+    return translateAPI.submit(data);
   } else if (url === '/languages') {
     var langs = translateAPI.getLanguagesList();
-    var deferred = q.defer();
-    deferred.resolve(langs);
-    return deferred.promise;
+    resolveWithData(langs); //  sync 2 async
   } else {
     return q.reject(`Unknown URL: ${url}`);
   }
+}
+
+function resolveWithData(data) {
+    var deferred = q.defer();
+    deferred.resolve(data);
+    return deferred.promise;
 }
 
 function start() {

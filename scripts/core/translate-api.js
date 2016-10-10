@@ -7,6 +7,7 @@ var q = require('q');
 var tkCalc = require('./../hash/tk-hash');
 var tkkScraper = require('./tkk-scraper');
 var externalApis = () => require('./topology-manager').readTopology().externalApis;
+var googleResponseProcessor = require('./google-response-processor');
 
 var tkk = null;
 var languagesList = null;
@@ -33,27 +34,38 @@ var submitToGoogle = function (data) {
 			});
 }
 
-function preSubmit(requestData) {
+function prepareAndSubmit(requestData) {
 
 	console.log(requestData);
 
-	if (!requestData.query || !requestData.sourceLang || !requestData.targetLang) {
+	if (!requestData.query || !requestData.sourceLang || (!requestData.targetLang && !requestData.targetLangs)) {
 		return q.reject('Request data is incomplete');
 	}
 
+	var isMultipleQuery = !!requestData.targetLangs;
+
 	var query = requestData.query;
 	var sourceLang = requestData.sourceLang;
-	var targetLang = requestData.targetLang;
+	var targetLangs = requestData.targetLangs || [requestData.targetLang];
 	var tk = tkCalc(query, tkk);
 
-	var data = {
-		q: query,
-		sl: sourceLang,
-		tl: targetLang,
-		tk: tk
-	};
+	var queries = targetLangs.map(tl => {
+		return {
+			q: query,
+			sl: sourceLang,
+			tl: tl,
+			tk: tk
+		};
+	});
+
+	var promises = queries.map(submitToGoogle);
 	
-	return submitToGoogle(data);
+	return q.all(promises)
+		.then(function (stringResponses) {
+        	var jsonsData = stringResponses.map(googleResponseProcessor);
+        	console.log(jsonsData.map(x => x.extract.translation));
+        	return isMultipleQuery ? jsonsData : jsonsData[0];
+      });
 }
 
 function refreshTkk() {
@@ -83,7 +95,7 @@ setInterval(refreshTkk, 30 * 60 * 1000);
 module.exports = {
 	//	@PreRequisite: isReady() === true
 	start: initServer,
-	submit: preSubmit,
+	submit: prepareAndSubmit,
 	getLanguagesList: () => languagesList,
 	isReady: isReady
 }
