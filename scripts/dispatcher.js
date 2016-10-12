@@ -1,6 +1,7 @@
 var q = require('q');
 var translateAPI = require('./core/translate-api.js');
 var getPostPayload = require('./core/get-post-payload.js');
+var topologyManager = require('./core/topology-manager');
 
 //We need a function which handles requests and send response
 function dispatcher(url, requestBody) {
@@ -30,7 +31,8 @@ function resolveWithData(data) {
 }
 
 function start() {
-  require('./core/topology-manager').init();
+  topologyManager.init();
+  //console.log(topologyManager.readTopology());
   return translateAPI.start();
 }
 

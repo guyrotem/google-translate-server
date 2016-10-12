@@ -56,8 +56,12 @@
 	  "code": "ny"
 	},
 	{
-	  "name": "Chinese",
-	  "code": "zh"
+	  "name": "Chinese (Trad)",
+	  "code": "zh-TW"
+	},
+	{
+	  "name": "Chinese (Simp)",
+	  "code": "zh-CN"
 	},
 	{
 	  "name": "Corsican",

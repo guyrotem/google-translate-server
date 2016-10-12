@@ -87,10 +87,23 @@ function loadLanguages() {
 function isReady() { return tkk !== null && languagesList !== null; }
 
 function initServer() {
-	return q.all([refreshTkk(), loadLanguages()]);
+	return q.all([fetchTkkWithExponentialBackoff(), loadLanguages()])
+		.then(() => {setInterval(refreshTkk, 45 * 60 * 1000);});
 }
 
-setInterval(refreshTkk, 30 * 60 * 1000);
+function fetchTkkWithExponentialBackoff() {
+	return expBackOff(refreshTkk, 4196);
+}
+
+function expBackOff(cb, initialBackoff) {
+	return cb()
+		.catch(() => {
+			console.log('failed to fetch key, trying again in ' + initialBackoff);
+			setTimeout(() => {
+				return expBackOff(cb, 2 * initialBackoff);
+			}, initialBackoff);
+		});
+}
 
 module.exports = {
 	//	@PreRequisite: isReady() === true

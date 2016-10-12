@@ -2,7 +2,7 @@ var http = require('http');
 var q = require('q');
 var serverDispatcher = require('./dispatcher');
 var getPostPayload = require('./core/get-post-payload');
-var topologyManager = require('./core/topology-manager')
+var topologyManager = require('./core/topology-manager');
 
 var server = http.createServer(requestHandler);
 
@@ -18,7 +18,7 @@ function startServer() {
 
 function requestHandler(request, response) {
 	try {
-  		response.setHeader("Access-Control-Allow-Origin", topologyManager.readTopology().externalApis.clientBaseDomain);
+  		response.setHeader("Access-Control-Allow-Origin", process.env.CLIENT_BASE_DOMAIN);
   		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
 		if (request.method === 'POST') {

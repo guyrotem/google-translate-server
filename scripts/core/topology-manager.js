@@ -6,6 +6,8 @@ function readTopology() {
 
 function init() {
 	productionSettings = require('./../../.conf/topology.json');
+	console.log('Topology initialized with:');
+	console.log(productionSettings);
 }
 
 module.exports = {

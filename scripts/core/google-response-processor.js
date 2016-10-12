@@ -1,25 +1,36 @@
 
-var responseProcessor = (googleStringResponse) => {
-	//var clean = googleStringResponse.replace(/,+/g, ',').replace(/\[,/g, '[').replace(/,\]/g, ']');
+var responseProcessor = (googleStringResponse, includeOriginal) => {
 	var clean = googleStringResponse
-	.replace(/,,/g, ',null,')
-	.replace(/,,/g, ',null,')
-	.replace(/\[,/g, '[null,')
-	.replace(/,\]/g, ',null]');
+		.replace(/,,/g, ',null,')
+		.replace(/,,/g, ',null,')
+		.replace(/\[,/g, '[null,')
+		.replace(/,\]/g, ',null]');
 	var parsed = JSON.parse(clean);
-	var gtHeader = parsed[0];
+	var translationHeader = parsed[0];
 	
 	return {
 		extract: {
-			translation: gtHeader[0][0],
-			actualQuery: gtHeader[0][1],
-			resultType: gtHeader[0].reverse()[0],	//	5th item
-			transliteration: getTransliteration(gtHeader[1]),
+			translation: getTranslation(translationHeader),
+			actualQuery: getActualQuery(translationHeader),
+			resultType: translationHeader[0].reverse()[0],	//	5th item
+			transliteration: getTransliteration(translationHeader.reverse()[0]),
 			synonyms: getSynonyms(parsed[1]),
 			sourceLanguage: parsed[2]
 		},
 		originalResponse: "\"" + googleStringResponse + "\""
 	};
+}
+
+function getTranslation(translationHeader) {
+	return translationHeader
+		.map(x => x[0])
+		.join('');
+}
+
+function getActualQuery(translationHeader) {
+	return translationHeader
+		.map(x => x[1])
+		.join(' ');
 }
 
 function getTransliteration(transliterationHeader) {
