@@ -2,6 +2,7 @@
   "dependencies": {
     "copy": "^0.3.0",
     "fs-promise": "^0.5.0",
+    "pg": "6.1.0",
     "phantom": "^2.1.21",
     "q": "^1.4.1",
     "querystring": "^0.2.0",

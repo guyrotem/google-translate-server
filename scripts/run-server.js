@@ -3,6 +3,7 @@ var q = require('q');
 var serverDispatcher = require('./dispatcher');
 var getPostPayload = require('./core/get-post-payload');
 var topologyManager = require('./core/topology-manager');
+var db = require('./dao/postgres-client');
 
 var server = http.createServer(requestHandler);
 
@@ -13,12 +14,12 @@ function startServer() {
 	    console.log(`Server listening on: ${port}`);
 	});
 
-	return serverDispatcher.start();
+	return q.all([serverDispatcher.start(), db.init(process.env.DATABASE_URL)]);
 }
 
 function requestHandler(request, response) {
 	try {
-  		response.setHeader("Access-Control-Allow-Origin", process.env.CLIENT_BASE_DOMAIN);
+  		response.setHeader("Access-Control-Allow-Origin", process.env.CLIENT_BASE_DOMAIN || 'http://localhost:5000');
   		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
 		if (request.method === 'POST') {

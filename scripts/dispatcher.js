@@ -2,6 +2,7 @@ var q = require('q');
 var translateAPI = require('./core/translate-api.js');
 var getPostPayload = require('./core/get-post-payload.js');
 var topologyManager = require('./core/topology-manager');
+var usageStatisticsDao = require('./dao/usage-statistics-dao');
 
 //We need a function which handles requests and send response
 function dispatcher(url, requestBody) {
@@ -11,6 +12,8 @@ function dispatcher(url, requestBody) {
   if (!translateAPI.isReady()) {
     return q.reject('server not initialiazed');
   }
+
+  usageStatisticsDao.incrementUsageCount(url);
 
   var data = JSON.parse(requestBody);
 
