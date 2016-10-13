@@ -3,14 +3,10 @@ function actionsQueue() {
 	var isBusy = false;
 
 	var runLater = (action, args) => {
-		addToQueue({
-			action: action,
-			args: args
-		});
-	}
+		var op = makeOp(action, args);
 
-	function addToQueue(op) {
 		operationsQueue.push(op);
+
 		if (!isBusy) {
 			isBusy = true;
 			startWorking();
@@ -28,6 +24,13 @@ function actionsQueue() {
 
 	function perform(op) {
 		return op.action.call(null, op.args);
+	}
+
+	function makeOp(action, args) {
+		return {
+			action: action,
+			args: args
+		};
 	}
 
 	return {

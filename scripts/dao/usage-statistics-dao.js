@@ -4,8 +4,8 @@ var actionsQueue = require('../queue/actions-queue');
 var queue = new actionsQueue();
 
 var getStatistics = (url) => `SELECT * FROM usage_statistics WHERE url = '${url}'`;
-var addStatistics = (url, count) => `INSERT INTO usage_statistics (count, url) VALUES(${urlCount + 1}, '${url}')`;
-var updateStatistics = (url, count) => `UPDATE usage_statistics SET count = ${urlCount + 1} WHERE url = '${url}'`;
+var addStatistics = (url, count) => `INSERT INTO usage_statistics (count, url) VALUES(${count + 1}, '${url}')`;
+var updateStatistics = (url, count) => `UPDATE usage_statistics SET count = ${count + 1} WHERE url = '${url}'`;
 
 var incrementUsageCountOp = (url) => {
 	var deferred = q.defer();
@@ -24,7 +24,7 @@ var incrementUsageCountOp = (url) => {
 			addQuery = updateStatistics(url, urlCount);
 		} else {
 			urlCount = 0;
-			addQuery = addQuery(url, urlCount);
+			addQuery = addStatistics(url, urlCount);
 		}
 
 		client.query(addQuery, [], (err, res) => {

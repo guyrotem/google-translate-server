@@ -8,23 +8,25 @@ function init(databaseUrl) {
 
 	pg.defaults.ssl = false;
 	pg.connect(databaseUrl || 'postgres:///google_translate_server', function(err, client) {
-	  if (err) {
-	  	return q.reject(err);
-	  };
+		if (err) {
+			deferred.reject(err);
+		} else {
+			pgClient = client;
+			console.log('Connected to PostgreSQL!');
+			printAllStatistics();
+			deferred.resolve();
+		}
+	});
 
-	  console.log('Connected to postgres! Getting schemas...');
-	  pgClient = client;
+	return deferred.promise;
+}
 
-	  deferred.resolve();
-
-	  client
+function printAllStatistics() {
+	pgClient
 	  	.query('SELECT * FROM usage_statistics;')
 	  	.on('row', function(row) {
 	      console.log(JSON.stringify(row));
 	    });
-	});
-
-	return deferred.promise;
 }
 
 

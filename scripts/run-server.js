@@ -3,7 +3,7 @@ var q = require('q');
 var serverDispatcher = require('./dispatcher');
 var getPostPayload = require('./core/get-post-payload');
 var topologyManager = require('./core/topology-manager');
-var db = require('./dao/postgres-client');
+var postgresDb = require('./dao/postgres-client');
 
 var server = http.createServer(requestHandler);
 
@@ -14,7 +14,8 @@ function startServer() {
 	    console.log(`Server listening on: ${port}`);
 	});
 
-	return q.all([serverDispatcher.start(), db.init(process.env.DATABASE_URL)]);
+	// TODO: init management
+	return q.all([serverDispatcher.start(), postgresDb.init(process.env.DATABASE_URL)]);
 }
 
 function requestHandler(request, response) {
