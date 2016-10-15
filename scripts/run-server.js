@@ -24,9 +24,7 @@ function requestHandler(request, response) {
   		response.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 
   		if (request.url === '/') {
-  			request
-  				.pipe(requestModule(process.env.CLIENT_BASE_DOMAIN))
-  				.pipe(response);
+  			proxyTo(process.env.CLIENT_BASE_DOMAIN + '/statics/', request, response);
   		} else if (request.method === 'POST') {
 			var getPostAndDispatchPromise =
 				getPostPayload(request)
@@ -47,6 +45,13 @@ function requestHandler(request, response) {
 	} catch (err) {
 		rejectOnError(response, err);
 	}
+}
+
+function proxyTo(url, request, response) {
+	console.log('Proxying to ' + url);
+	request
+		.pipe(requestModule(url))
+		.pipe(response);
 }
 
 function onDispatcherPromise(response, promise) {
