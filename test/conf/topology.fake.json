@@ -1,6 +1,5 @@
 {
 	"externalApis": {
-		"clientBaseDomain": "http://localhost:5000",
 		"googleTranslateApi": "http://localhost:9444",
 		"googleTranslateWebpage": "http://localhost:9445/"
 	}

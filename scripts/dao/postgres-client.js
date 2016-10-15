@@ -7,9 +7,10 @@ function init(databaseUrl) {
 	var deferred = q.defer();
 
 	pg.defaults.ssl = false;
-	pg.connect(databaseUrl || 'postgres:///google_translate_server', function(err, client) {
+	pg.connect(databaseUrl, function(err, client) {
 		if (err) {
-			deferred.reject(err);
+			console.log('FAILED to connect to POSTGRES database. Make sure it is up!');
+			return deferred.reject(err);
 		} else {
 			pgClient = client;
 			console.log('Connected to PostgreSQL!');

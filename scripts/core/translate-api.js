@@ -87,12 +87,13 @@ function loadLanguages() {
 function isReady() { return tkk !== null && languagesList !== null; }
 
 function initServer() {
+	console.log('Init TAPI');
 	return q.all([fetchTkkWithExponentialBackoff(), loadLanguages()])
 		.then(() => {setInterval(refreshTkk, 45 * 60 * 1000);});
 }
 
 function fetchTkkWithExponentialBackoff() {
-	return expBackOff(refreshTkk, 4196);
+	return expBackOff(refreshTkk, 4096);
 }
 
 function expBackOff(cb, initialBackoff) {

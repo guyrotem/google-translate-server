@@ -1,29 +1,33 @@
 var http = require('http');
-var q = require('q');
 var serverDispatcher = require('./dispatcher');
 var getPostPayload = require('./core/get-post-payload');
-var topologyManager = require('./core/topology-manager');
-var postgresDb = require('./dao/postgres-client');
+var requestModule = require('request');
 
 var server = http.createServer(requestHandler);
 
 function startServer() {
-	var port = process.env.PORT || 9333;
+	require('./load-dot-env')();
+
+	var port = process.env.PORT;
 	
 	server.listen(port, function () {
 	    console.log(`Server listening on: ${port}`);
 	});
 
-	// TODO: init management
-	return q.all([serverDispatcher.start(), postgresDb.init(process.env.DATABASE_URL)]);
+	return require('./init-manager')
+		.start();
 }
 
 function requestHandler(request, response) {
 	try {
-  		response.setHeader("Access-Control-Allow-Origin", process.env.CLIENT_BASE_DOMAIN || 'http://localhost:5000');
-  		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  		response.setHeader('Access-Control-Allow-Origin', process.env.CLIENT_BASE_DOMAIN);
+  		response.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 
-		if (request.method === 'POST') {
+  		if (request.url === '/') {
+  			request
+  				.pipe(requestModule(process.env.CLIENT_BASE_DOMAIN))
+  				.pipe(response);
+  		} else if (request.method === 'POST') {
 			var getPostAndDispatchPromise =
 				getPostPayload(request)
 					.then(dataAsString => {
@@ -62,7 +66,7 @@ function rejectOnError(response, additionalData) {
   console.log(errorMessage);
 
   response.writeHead(502, {'Content-Type': 'application/json'});
-  response.end(JSON.stringify({"error": errorMessage}));
+  response.end(JSON.stringify({error: errorMessage}));
 }
 
 function isAlive() {

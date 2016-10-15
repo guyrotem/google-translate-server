@@ -1,7 +1,6 @@
 var q = require('q');
 var translateAPI = require('./core/translate-api.js');
 var getPostPayload = require('./core/get-post-payload.js');
-var topologyManager = require('./core/topology-manager');
 var usageStatisticsDao = require('./dao/usage-statistics-dao');
 
 //We need a function which handles requests and send response
@@ -33,14 +32,7 @@ function resolveWithData(data) {
     return deferred.promise;
 }
 
-function start() {
-  topologyManager.init();
-  //console.log(topologyManager.readTopology());
-  return translateAPI.start();
-}
-
 module.exports = {
-  start: start,
   request: dispatcher,
   isReady: translateAPI.isReady
 }
