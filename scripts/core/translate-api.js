@@ -1,4 +1,5 @@
-var request = require('request-promise');
+var request = require('request');
+var requestPromise = require('request-promise');
 var querystring = require('querystring');
 var extend = require('extend');
 var fs = require('fs-promise');
@@ -12,7 +13,7 @@ var googleResponseProcessor = require('./google-response-processor');
 var tkk = null;
 var languagesList = null;
 
-var submitToGoogle = function (data) {
+function submitTranslation(data) {
 	var translateUrl = externalApis().googleTranslateApi;
 	var queryParams = extend({
 		client: 't',
@@ -28,13 +29,36 @@ var submitToGoogle = function (data) {
 
 	var fullUrl = translateUrl + '?' + querystring.stringify(queryParams);
 
-	return request(fullUrl)
-			.catch(res => {
-				return q.reject(res.error);
-			});
+	return requestPromise(fullUrl)
+		.catch(res => {
+			return q.reject(res.error);
+		});
 }
 
-function prepareAndSubmit(requestData) {
+function submitTts(data) {
+	var ttsUrl = externalApis().googleTtsApi;
+	var queryParams = extend({
+		ie: 'UTF-8',
+		total: 1,
+		idx: 0,
+		client: 't'
+	}, data);
+
+	var fullUrl = ttsUrl + '?' + querystring.stringify(queryParams);
+
+	console.log(fullUrl);
+
+	var options = {
+	  url: fullUrl,
+	  headers: {
+	    'Referer': fullUrl
+	  }
+	};
+
+	return request(options);
+}
+
+function translate(requestData) {
 
 	console.log(requestData);
 
@@ -58,7 +82,7 @@ function prepareAndSubmit(requestData) {
 		};
 	});
 
-	var promises = queries.map(submitToGoogle);
+	var promises = queries.map(submitTranslation);
 	
 	return q.all(promises)
 		.then(function (stringResponses) {
@@ -66,6 +90,18 @@ function prepareAndSubmit(requestData) {
         	console.log(jsonsData.map(x => x.extract.translation));
         	return isMultipleQuery ? jsonsData : jsonsData[0];
       });
+}
+
+function tts(requestData) {
+	var submitData = {
+		q: requestData.query,	//	encodeURIComponent?
+		tl: requestData.targetLang,
+		textlen: requestData.query.length,
+		tk: tkCalc(requestData.query, tkk),
+		ttsspeed: requestData.speed
+	}
+
+	return submitTts(submitData);
 }
 
 function refreshTkk() {
@@ -87,7 +123,6 @@ function loadLanguages() {
 function isReady() { return tkk !== null && languagesList !== null; }
 
 function initServer() {
-	console.log('Init TAPI');
 	return q.all([fetchTkkWithExponentialBackoff(), loadLanguages()])
 		.then(() => {setInterval(refreshTkk, 45 * 60 * 1000);});
 }
@@ -107,9 +142,9 @@ function expBackOff(cb, initialBackoff) {
 }
 
 module.exports = {
-	//	@PreRequisite: isReady() === true
-	start: initServer,
-	submit: prepareAndSubmit,
+	init: initServer,
+	translate: translate,
+	tts: tts,
 	getLanguagesList: () => languagesList,
 	isReady: isReady
 }

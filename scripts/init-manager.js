@@ -9,7 +9,7 @@ function start() {
 
 	return q.all([
 		postgresDb.init(process.env.DATABASE_URL),
-		translateAPI.start()
+		translateAPI.init()
 	]);
 }
 

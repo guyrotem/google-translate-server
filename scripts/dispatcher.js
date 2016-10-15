@@ -17,7 +17,9 @@ function dispatcher(url, requestBody) {
   var data = JSON.parse(requestBody);
 
   if (url === '/api/translate') {
-    return translateAPI.submit(data);
+    return translateAPI.translate(data);
+  } else if (url === '/api/tts') {
+    return translateAPI.tts(data);
   } else if (url === '/api/languages') {
     var langs = translateAPI.getLanguagesList();
     return resolveWithData(langs); //  sync 2 async

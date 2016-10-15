@@ -2,6 +2,7 @@ var http = require('http');
 var serverDispatcher = require('./dispatcher');
 var getPostPayload = require('./core/get-post-payload');
 var requestModule = require('request');
+var querystring = require('querystring');
 
 var server = http.createServer(requestHandler);
 
@@ -20,9 +21,7 @@ function startServer() {
 
 function requestHandler(request, response) {
 	try {
-  		response.setHeader('Access-Control-Allow-Origin', process.env.CLIENT_BASE_DOMAIN);
-  		response.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-
+		//	TODO: need to be able to tell between JSON apis, media APIs, HTML...
   		if (request.url === '/') {
   			proxyTo(process.env.CLIENT_BASE_DOMAIN + '/statics/', request, response);
   		} else if (request.method === 'POST') {
@@ -32,14 +31,22 @@ function requestHandler(request, response) {
 						return serverDispatcher.request(request.url, dataAsString);
 					});
 			onDispatcherPromise(
+				0,
+				request,
 				response,
 				getPostAndDispatchPromise
 			);
 		} else if (request.method === 'GET') {
 			//	TODO: get query string params(?)
+			var url = request.url.split('?')[0];
+			var search = request.url.split('?')[1];
+			var data = JSON.stringify(querystring.parse(search));
+
 			onDispatcherPromise(
+				url === '/api/tts' ? 1 : 0,
+				request,
 				response,
-				serverDispatcher.request(request.url, '{}')
+				serverDispatcher.request(url, data)
 			);
 		}
 	} catch (err) {
@@ -54,16 +61,23 @@ function proxyTo(url, request, response) {
 		.pipe(response);
 }
 
-function onDispatcherPromise(response, promise) {
-	promise
-		.then(responseData => {
-			response.writeHead(200, {'Content-Type': 'application/json'});
-            response.end(JSON.stringify(responseData));
-		})
-		.catch(err => {
-			rejectOnError(response, err);
-		});
+function onDispatcherPromise(action, request, response, promise) {
+	headers = {'Content-Type': 'application/json'};
 
+	if (action === 1) {
+		request
+			.pipe(promise)
+			.pipe(response);
+	} else {
+		promise
+			.then(responseData => {
+				response.writeHead(200, headers);
+	            response.end(JSON.stringify(responseData));
+			})
+			.catch(err => {
+				rejectOnError(response, err);
+			});
+	}
 }
 
 function rejectOnError(response, additionalData) {

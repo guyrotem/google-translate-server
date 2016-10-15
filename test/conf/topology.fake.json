@@ -1,6 +1,7 @@
 {
 	"externalApis": {
 		"googleTranslateApi": "http://localhost:9444",
+		"googleTtsApi": "http://TODO/FAKE.TTS.SERVER",
 		"googleTranslateWebpage": "http://localhost:9445/"
 	}
 }
