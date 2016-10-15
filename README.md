@@ -2,7 +2,7 @@
 
 NodeJS proxy for Google Translate
 
-### [See demo here](https://google-translate-client.herokuapp.com/)
+### [See demo here](https://google-translate-proxy.herokuapp.com/)
 
 ## ¡¿ Why do I need a proxy ?!
 
