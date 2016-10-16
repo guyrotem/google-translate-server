@@ -7,7 +7,7 @@ var fakeClientExpressServer = require('./fake-client');
 var fakeTkkPort = 9445;	//	TODO: from topology
 var fakeGooglePort = 9444;	//	TODO: from topology
 var fakeTtsPort = 9443;	//
-var fakeClientPort = 5000;
+var fakeClientPort = 5000;	//	NOTE: from env variables
 
 function startAll() {
 	var fakeServerPromise = fakeTkkServer.start(fakeTkkPort)
@@ -27,14 +27,15 @@ function startAll() {
 			console.log('Fake Client started!');
 		});
 
-	return q.all([fakeServerPromise, fakeGooglePromise, fakeTtsPromise, fakeClientExpressServer]);
+	return q.all([fakeServerPromise, fakeGooglePromise, fakeTtsPromise, fakeClientPromise]);
 }
 
 function stopAll() {
 	return q.all([
 		fakeTkkServer.stop(),
 		fakeTtsServer.stop(),
-		fakeGoogleServer.stop()
+		fakeGoogleServer.stop(),
+		fakeClientExpressServer.stop()
 	]);
 }
 
@@ -44,6 +45,7 @@ module.exports = {
 	servers: {
 		googleApiServer: fakeGoogleServer,
 		googleTkkServer: fakeTkkServer,
-		googleTtsServer: fakeTtsServer
+		googleTtsServer: fakeTtsServer,
+		clientFileServer: fakeClientExpressServer
 	}
 }
