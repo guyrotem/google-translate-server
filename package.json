@@ -26,7 +26,6 @@
   "readme": "Readme.md",
   "scripts": {
     "simulation": "node test/start-mock.js",
-    "postinstall": "npm test",
     "lint": "eslint lib/ *.js test/ && echo Lint passed.",
     "test": "npm run lint && npm run test-ci",
     "test-browser": "node test/browser/start.js",
