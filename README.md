@@ -11,7 +11,7 @@ Well, sure, just open the networking panel of the Dev tools and see where the re
 You would notice that the API requires around a dozen parameters, most of which you will quickly understand or walk around them easily.
 ...except for "tk", which has some random-looking values: e.g.: "258417.372466". Try to fake it with random values, and you will get HTTP status 403 (Forbidden).
 It turns out that "_tk_" is a hash value based on your query (the string you wish to translate) and some private key (called TKK), which is embedded in your DOM when you load the Google translate page. This private key changes every hour (but it seems that old keys can be used for quite a long time before they actually expire).
-For more info on the hash function, see [tk-hash.js](https://github.com/guyrotem/google-translate-server/blob/master/scripts/core/tk-hash.js).
+For more info on the hash function, see [tk-hash.js](https://github.com/guyrotem/google-translate-server/blob/master/scripts/hash/tk-hash.js).
 
 As a conclusion, in order to use Google's API directly, you would have to:
 
