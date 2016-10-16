@@ -16,8 +16,7 @@
   "devDependencies": {
     "eslint": "^2.5.3",
     "istanbul": "^0.4.5",
-    "mocha": "^3.1.2",
-    "taper": "^0.5.0"
+    "mocha": "^3.1.2"
   },
   "engines": {
     "node": ">=0.8.0"
@@ -27,6 +26,7 @@
   "readme": "Readme.md",
   "scripts": {
     "simulation": "node test/start-mock.js",
+    "postinstall": "npm test",
     "lint": "eslint lib/ *.js test/ && echo Lint passed.",
     "test": "npm run lint && npm run test-ci",
     "test-browser": "node test/browser/start.js",
