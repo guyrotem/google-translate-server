@@ -1,5 +1,5 @@
 
-var responseProcessor = (googleStringResponse, includeOriginal) => {
+var responseProcessor = (googleStringResponse) => {
 	var clean = googleStringResponse
 		.replace(/,,/g, ',null,')
 		.replace(/,,/g, ',null,')

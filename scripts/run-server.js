@@ -1,8 +1,8 @@
 var http = require('http');
 var serverDispatcher = require('./dispatcher');
 var getPostPayload = require('./core/get-post-payload');
-var requestModule = require('request');
-var querystring = require('querystring');
+var urlModule = require('url');
+var initManager = require('./init-manager');
 
 var server = http.createServer(requestHandler);
 
@@ -15,74 +15,73 @@ function startServer() {
 	    console.log(`Server listening on: ${port}`);
 	});
 
-	return require('./init-manager')
-		.start();
+	return initManager.start();
 }
 
 function requestHandler(request, response) {
 	try {
-		//	TODO: need to be able to tell between JSON apis, media APIs, HTML...
-  		if (request.url === '/') {
-  			proxyTo(process.env.CLIENT_BASE_DOMAIN + '/statics/', request, response);
-  		} else if (request.method === 'POST') {
-			var getPostAndDispatchPromise =
-				getPostPayload(request)
-					.then(dataAsString => {
-						return serverDispatcher.request(request.url, dataAsString);
-					});
-			onDispatcherPromise(
-				0,
-				request,
-				response,
-				getPostAndDispatchPromise
-			);
-		} else if (request.method === 'GET') {
-			//	TODO: get query string params(?)
-			var url = request.url.split('?')[0];
-			var search = request.url.split('?')[1];
-			var data = JSON.stringify(querystring.parse(search));
+  		if (request.method === 'POST') {
+			getPostPayload(request)
+				.then(dataAsString => {
+					var url = request.url;
+					var data = JSON.parse(dataAsString);
+					var dispatcherResult = serverDispatcher.request(url, data);
 
-			onDispatcherPromise(
-				url === '/api/tts' ? 1 : 0,
+					handleDispatcherResult(
+						request,
+						response,
+						dispatcherResult
+					);
+				});
+		} else if (request.method === 'GET') {
+			var url = request.url.split('?')[0];
+			var data = urlModule.parse(request.url, true).query;
+			var dispatcherResult = serverDispatcher.request(url, data);
+
+			handleDispatcherResult(
 				request,
 				response,
-				serverDispatcher.request(url, data)
+				dispatcherResult
 			);
+		} else {
+			rejectOnError(response, `Unknown method ${request.method}`);
 		}
 	} catch (err) {
 		rejectOnError(response, err);
 	}
 }
 
-function proxyTo(url, request, response) {
-	console.log('Proxying to ' + url);
-	request
-		.pipe(requestModule(url))
-		.pipe(response);
-}
+function handleDispatcherResult(request, response, dispatcherResult) {
+	console.info('Result type: ' + dispatcherResult.type);
 
-function onDispatcherPromise(action, request, response, promise) {
-	headers = {'Content-Type': 'application/json'};
+	var action = dispatcherResult.type;
+	var data = dispatcherResult.data;
+	var contentType = dispatcherResult.contentType || 'application/json';
 
-	if (action === 1) {
+	if (action === 'PROXY') {
 		request
-			.pipe(promise)
+			.pipe(data)
 			.pipe(response);
-	} else {
-		promise
+
+	} else if (action === 'PROMISE/TEXT') {
+		var header = {'Content-Type': contentType};
+
+		data
 			.then(responseData => {
-				response.writeHead(200, headers);
+				response.writeHead(200, header);
 	            response.end(JSON.stringify(responseData));
 			})
 			.catch(err => {
 				rejectOnError(response, err);
 			});
+	} else {
+		rejectOnError(response, `Unknown action: ${action}`);
 	}
 }
 
 function rejectOnError(response, additionalData) {
   var errorMessage = additionalData || 'Unknown Error';
-  console.log(errorMessage);
+  console.error(errorMessage);
 
   response.writeHead(502, {'Content-Type': 'application/json'});
   response.end(JSON.stringify({error: errorMessage}));
@@ -90,7 +89,7 @@ function rejectOnError(response, additionalData) {
 
 function isAlive() {
 	return server.listening
-	&& serverDispatcher.isReady();
+	&& initManager.isReady();
 }
 
 module.exports = {

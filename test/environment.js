@@ -1,6 +1,7 @@
 var q = require('q');
 var fs = require('fs');
 var tkHash = require('./../scripts/hash/tk-hash');
+var mockServers = require('./fake/mock-servers');
 
 function runMocks() {
 	var mockServerAlive = setupMocks();
@@ -9,13 +10,15 @@ function runMocks() {
 	return q.all([mockServerAlive, serverAlive]);
 }
 
+function stop() {
+	return mockServers.stopAll();
+}
+
 function startServer() {
 	return require('./../scripts/run-server').startServer();
 }
 
 function setupMocks() {
-	var mockServers = require('./mock-servers');
-
 	var mockData = require('./data.json');
 	mockData.entries.forEach(entry => {
 		var tk = tkHash(entry.query, mockData.tkk);
@@ -26,6 +29,16 @@ function setupMocks() {
 				entry.language,
 				entry.transliteration,
 				entry.synonyms,
+				tk
+			);
+	});
+
+	mockData.tts.forEach(ttsEntry => {
+		var tk = tkHash(ttsEntry.query, mockData.tkk);
+		mockServers.servers.googleTtsServer.addEntry(
+				ttsEntry.query,
+				ttsEntry.language,
+				ttsEntry.audio,
 				tk
 			);
 	});
@@ -42,6 +55,7 @@ function copyFakeTopology() {
 	if (!fs.existsSync('.conf')) {
 	    fs.mkdirSync('.conf');
 	}
+
 	var cp = fs.createReadStream('test/conf/topology.fake.json').pipe(fs.createWriteStream('./.conf/topology.json'));
 
 	cp.on('error', deferred.reject);
@@ -52,5 +66,6 @@ function copyFakeTopology() {
 
 module.exports = {
 	start: runMocks,
+	stop: stop,
 	copyTopology: copyFakeTopology
 };

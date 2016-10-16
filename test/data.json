@@ -45,5 +45,57 @@
 			"transliteration": "hatul",
 			"language": "iw"
 		}
+	],
+	"tts": [
+		{
+			"query": "Hola",
+			"language": "es",
+			"audio": "audio/hola.mpg"
+		},
+		{
+			"query": "Bonjour",
+			"language": "fr",
+			"audio": "audio/bonjour.mpg"
+		},
+		{
+			"query": "Hallo",
+			"language": "de",
+			"audio": "audio/hallo.mpg"
+		},
+		{
+			"query": "你好",
+			"language": "zh-CN",
+			"audio": "audio/ni-hao.mpg"
+		},
+		{
+			"query": "perro",
+			"language": "es",
+			"audio": "audio/perro.mpg"
+		},
+		{
+			"query": "chien",
+			"language": "fr",
+			"audio": "audio/chien.mpg"
+		},
+		{
+			"query": "Hund",
+			"language": "de",
+			"audio": "audio/hund.mpg"
+		},
+		{
+			"query": "gato",
+			"language": "es",
+			"audio": "audio/gato.mpg"
+		},
+		{
+			"query": "chat",
+			"language": "fr",
+			"audio": "audio/chat.mpg"
+		},
+		{
+			"query": "Katze",
+			"language": "de",
+			"audio": "audio/katze.mpg"
+		}
 	]
 }

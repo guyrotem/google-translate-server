@@ -2,6 +2,7 @@ var q = require('q');
 var translateAPI = require('./core/translate-api.js');
 var getPostPayload = require('./core/get-post-payload.js');
 var usageStatisticsDao = require('./dao/usage-statistics-dao');
+var requestModule = require('request');
 
 //We need a function which handles requests and send response
 function dispatcher(url, requestBody) {
@@ -14,27 +15,28 @@ function dispatcher(url, requestBody) {
 
   usageStatisticsDao.incrementUsageCount(url);
 
-  var data = JSON.parse(requestBody);
-
-  if (url === '/api/translate') {
-    return translateAPI.translate(data);
+  if (url === '/') {
+    return serveClient();
+  } else if (url === '/api/translate') {
+    return translateAPI.translate(requestBody);
   } else if (url === '/api/tts') {
-    return translateAPI.tts(data);
+    return translateAPI.tts(requestBody);
   } else if (url === '/api/languages') {
-    var langs = translateAPI.getLanguagesList();
-    return resolveWithData(langs); //  sync 2 async
+    return translateAPI.getLanguagesList();
   } else {
     return q.reject(`Unknown URL: ${url}`);
   }
 }
 
-function resolveWithData(data) {
-    var deferred = q.defer();
-    deferred.resolve(data);
-    return deferred.promise;
+function serveClient() {
+  var url = process.env.CLIENT_BASE_DOMAIN + '/statics/';
+
+  return {
+    type: 'PROXY',
+    data: requestModule(url)
+  };
 }
 
 module.exports = {
-  request: dispatcher,
-  isReady: translateAPI.isReady
+  request: dispatcher
 }

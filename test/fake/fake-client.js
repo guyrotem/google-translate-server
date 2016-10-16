@@ -1,19 +1,28 @@
-// var tkk = '123456.83426423';
 var http = require('http');
 var q = require('q');
-var tkk = null;
+
+var server;
 
 function requestHandler(request, response) {
 	response.writeHead(200, {'Content-Type': 'text/html'});
 	response.end(makePageContent());
 }
 
-function startTkkServer(port) {
+function startServer(port) {
 	var deferred = q.defer();
-	var server = http.createServer(requestHandler);
+	server = http.createServer(requestHandler);
 
 	server.listen(port, function () {
-		//	server loaded
+		deferred.resolve();
+	});
+
+	return deferred.promise;
+}
+
+function stopServer() {
+	var deferred = q.defer();
+
+	server.close(() => {
 		deferred.resolve();
 	});
 
@@ -25,23 +34,23 @@ function makePageContent() {
 		<html>
 			<head>
 				<title>
-					Fake TKK
+					Client App
 				</title>
 			</head>
 			<body>
-				<script>
-					window.TKK = ${tkk}
-				</script>
+				<header>
+					HEADER
+				</header>
+
+				<div>
+					Translate something...
+				</div>
 			</body>
 		</html>	
 	`;
 }
 
-function setTkk(newTkk) {
-	tkk = "\"" + newTkk + "\"";
-}
-
 module.exports = {
-	start: startTkkServer,
-	setTkk: setTkk
+	start: startServer,
+	stop: stopServer
 };

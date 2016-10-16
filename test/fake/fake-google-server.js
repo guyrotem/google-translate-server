@@ -3,6 +3,7 @@ var q = require('q');
 var url = require('url');
 
 var answers = [];
+var server;
 
 function requestHandler(request, response) {
 	var query = url.parse(request.url, true).query;
@@ -28,10 +29,19 @@ function requestHandler(request, response) {
 
 function startGoogleServer(port) {
 	var deferred = q.defer();
-	var server = http.createServer(requestHandler);
+	server = http.createServer(requestHandler);
 
 	server.listen(port, function () {
-		//	server loaded
+		deferred.resolve();
+	});
+
+	return deferred.promise;
+}
+
+function stopServer() {
+	var deferred = q.defer();
+
+	server.close(() => {
 		deferred.resolve();
 	});
 
@@ -59,5 +69,6 @@ function addTranslation(query, translation, tl, transliteration, synonyms, tk) {
 
 module.exports = {
 	start: startGoogleServer,
+	stop: stopServer,
 	addTranslation: addTranslation
 };
