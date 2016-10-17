@@ -6,19 +6,24 @@ var pgClient;
 function init(databaseUrl) {
 	var deferred = q.defer();
 
-	pg.defaults.ssl = false;
-	pg.connect(databaseUrl, function(err, client) {
-		if (err) {
-			console.log('FAILED to connect to POSTGRES database. Make sure it is up!');
-			return deferred.reject(err);
-		} else {
-			pgClient = client;
-			createSchemas();
-			console.log('Connected to PostgreSQL!');
-			printAllStatistics();
-			deferred.resolve();
-		}
-	});
+	if (process.env.ENABLE_PSQL === 'true') {
+		pg.defaults.ssl = false;
+		pg.connect(databaseUrl, function(err, client) {
+			if (err) {
+				console.log('FAILED to connect to POSTGRES database. Make sure it is up!');
+				return deferred.reject(err);
+			} else {
+				pgClient = client;
+				createSchemas();
+				console.log('Connected to PostgreSQL!');
+				printAllStatistics();
+				deferred.resolve();
+			}
+		});
+	} else {
+		pgClient = new PgClientMock();
+		deferred.resolve('MOCK');
+	}
 
 	return deferred.promise;
 }
@@ -35,6 +40,12 @@ function printAllStatistics() {
 	      console.log(JSON.stringify(row));
 	    });
 }
+
+function PgClientMock() {}
+
+PgClientMock.prototype.query = function (a, b, callback) {
+	callback(null, {rows: []});
+};
 
 
 module.exports = {

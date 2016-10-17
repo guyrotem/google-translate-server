@@ -7,8 +7,6 @@ var initManager = require('./init-manager');
 var server = http.createServer(requestHandler);
 
 function startServer() {
-	require('./load-dot-env')();
-
 	var port = process.env.PORT;
 	
 	server.listen(port, function () {

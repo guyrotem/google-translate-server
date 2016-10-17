@@ -7,7 +7,7 @@ var getStatistics = (url) => `SELECT * FROM usage_statistics WHERE url = '${url}
 var addStatistics = (url, lastCount) => `INSERT INTO usage_statistics (count, url) VALUES(${lastCount + 1}, '${url}')`;
 var updateStatistics = (url, lastCount) => `UPDATE usage_statistics SET count = ${lastCount + 1} WHERE url = '${url}'`;
 
-var incrementUsageCountOp = (url) => {
+function incrementUsageCountOp(url) {
 	var deferred = q.defer();
 	var client = sqlDriver.getClient();
 	var select = `SELECT * FROM usage_statistics WHERE url = '${url}'`;

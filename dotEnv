@@ -1,3 +1,4 @@
 PORT=9333
 CLIENT_BASE_DOMAIN=http://localhost:5000
 DATABASE_URL=postgres:///google_translate_server
+ENABLE_PSQL=false

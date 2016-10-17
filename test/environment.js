@@ -15,7 +15,7 @@ function stop() {
 }
 
 function startServer() {
-	return require('./../scripts/run-server').startServer();
+	return require(__dirname + './../scripts/run-server').startServer();
 }
 
 function setupMocks() {
@@ -51,7 +51,6 @@ function setupMocks() {
 function copyFakeTopology() {
 	var deferred = q.defer();
 
-
 	if (!fs.existsSync('.conf')) {
 	    fs.mkdirSync('.conf');
 	}
@@ -61,6 +60,7 @@ function copyFakeTopology() {
 	cp.on('error', deferred.reject);
 	cp.on('close', deferred.resolve);
 
+	require(__dirname + './../scripts/load-dot-env')();
 	return deferred.promise;
 }
 

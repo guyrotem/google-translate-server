@@ -15,7 +15,7 @@ function loadDotEnv(envFilePath) {
       process.env[key] = process.env[key] || parsedObj[key];
     });
   } catch (e) {
-    console.log('.env file not loaded');
+    console.log('.env file not loaded!');
   }
 }
 
