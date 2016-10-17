@@ -1,8 +1,11 @@
 # google-translate-server
 
-NodeJS proxy for Google Translate
+NodeJS proxy for Google Translate & TTS services.
 
-### [See demo here](https://google-translate-proxy.herokuapp.com/)
+supplying a simple API to get you through Google's blocking of the public API for free.
+_see APIs below_
+
+### [See live demo here](https://google-translate-proxy.herokuapp.com/)
 
 [![Build Status](https://travis-ci.org/guyrotem/google-translate-server.svg?branch=master)](https://travis-ci.org/guyrotem/google-translate-server)
 
@@ -23,10 +26,6 @@ You may also work in test mode, where translation system is mocked by the data c
 `npm run simulation`
 In this mode, no requests will be sent to Google, but it uses the same "production" code to extract the TKK and send queries (useful for IT tests).
 It currently only supports the queries "dog" and "cat", in French, Spanish, German and Hebrew, but you may modify the data file for more :).
-
-## Sample client using this API
-
-See [google-translate-client](https://github.com/guyrotem/google-translate-client/) project for a working example of a FE project using this API (translating into multiple languages simultanously!)
 
 ## ¡¿ Why do I need a proxy ?!
 
@@ -49,7 +48,6 @@ The API result is made of arrays of arrays (like a JSON that was stripped out of
 **This proxy API does all that for you!**
 
 ## APIs
-
 _/api/translate_
 
 translate a query into multiple languages simultaneously.
@@ -60,9 +58,9 @@ INPUT:
 	query: String,
 	sourceLang: String,	//	2 or 3 letters, _usually_ the ISO2 language code, small case
 
-	// Use exactly one of the following two
-	targetLangs?: String[],	//	USE targetLangs (array) XOR targetLang (string)	
-	targetLang?: String,	//
+	// Use exactly one of the following two (XOR)!
+	targetLangs?: String[],	//	USE targetLangs (array) to translate to multiple target languages in the same call
+	targetLang?: String,	//      USE targetLang (string) to translate to a single target langauge
 }
 ```
 
@@ -84,6 +82,10 @@ OUTPUT
  { ... }
 ]
 ```
+
+> to use multiple target languages simultaneously, use POST, specifying the parameters in the request body.
+> to use a single target language, you may also use GET, e.g.:
+    https://google-translate-proxy.herokuapp.com/api/translate?query=where%20are%20my%20sunglasses&targetLang=de&sourceLang=en
 
 _/api/languages_
 
@@ -111,11 +113,15 @@ _(as query string)_
 }
 
 e.g.:
-_/api/tts?query=perro&language=es&speed=0.24_
+https://google-translate-proxy.herokuapp.com/api/tts?query=perro&language=es&speed=0.24
 ```
 
 OUTPUT
 mpeg audio 
+
+## Sample client using this API
+
+See [google-translate-client](https://github.com/guyrotem/google-translate-client/) project for a working example of a FE project using this API (translating into multiple languages simultanously!)
 
 ## IMPORTANT NOTICE
 
