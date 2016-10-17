@@ -6,6 +6,28 @@ NodeJS proxy for Google Translate
 
 [![Build Status](https://travis-ci.org/guyrotem/google-translate-server.svg?branch=master)](https://travis-ci.org/guyrotem/google-translate-server)
 
+## Setup
+
+Make sure you have npm properly installed.
+
+1.	git clone git@github.com:guyrotem/google-translate-server.git
+2.	_npm install_
+3.	type _cp dotEnv .env_ in the root of the project, to create your private environment vars
+4.	install and configure Postgres on your computer (or skip it and disable Postgres. see below)
+	=> Install Postgres => create a local database: **"psql -c 'create database google_translate_server;' -U postgres"** => make sure PostgreSQL is running in the background (the elephant!)
+5.	_npm start_
+
+You may also disable Postgres: "sed -i -e 's/ENABLE_PSQL=true/ENABLE_PSQL=false/' .env"
+
+You may also work in test mode, where translation system is mocked by the data contained in [data.json](https://github.com/guyrotem/google-translate-server/blob/master/test/data.json) file.
+`npm run simulation`
+In this mode, no requests will be sent to Google, but it uses the same "production" code to extract the TKK and send queries (useful for IT tests).
+It currently only supports the queries "dog" and "cat", in French, Spanish, German and Hebrew, but you may modify the data file for more :).
+
+## Sample client using this API
+
+See [google-translate-client](https://github.com/guyrotem/google-translate-client/) project for a working example of a FE project using this API (translating into multiple languages simultanously!)
+
 ## ¡¿ Why do I need a proxy ?!
 
 Can't I just call the API used by Google Translate?
@@ -26,6 +48,8 @@ The API result is made of arrays of arrays (like a JSON that was stripped out of
 
 **This proxy API does all that for you!**
 
+## APIs
+
 _/api/translate_
 
 translate a query into multiple languages simultaneously.
@@ -35,7 +59,10 @@ INPUT:
 {
 	query: String,
 	sourceLang: String,	//	2 or 3 letters, _usually_ the ISO2 language code, small case
-	targetLangs: String[]  //	...
+
+	// Use exactly one of the following two
+	targetLangs?: String[],	//	USE targetLangs (array) XOR targetLang (string)	
+	targetLang?: String,	//
 }
 ```
 
@@ -89,24 +116,6 @@ _/api/tts?query=perro&language=es&speed=0.24_
 
 OUTPUT
 mpeg audio 
-
-
-## Setup
-
-Make sure you have npm properly installed.
-
-1.	clone this repo
-2.	_npm install_
-3.	_npm start_
-
-You may also work in test mode, where translation system is mocked by the data contained in [data.json](https://github.com/guyrotem/google-translate-server/blob/master/test/data.json) file.
-`npm run simulation`
-In this mode, no requests will be sent to Google, but it uses the same "production" code to extract the TKK and send queries (useful for IT tests).
-It currently only supports the queries "dog" and "cat", in French, Spanish, German and Hebrew, but you may modify the data file for more :).
-
-## Sample client using this API
-
-See [google-translate-client](https://github.com/guyrotem/google-translate-client/) project for a working example of a FE project using this API (translating into multiple languages simultanously!)
 
 ## IMPORTANT NOTICE
 
