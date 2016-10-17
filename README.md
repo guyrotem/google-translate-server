@@ -26,7 +26,7 @@ The API result is made of arrays of arrays (like a JSON that was stripped out of
 
 **This proxy API does all that for you!**
 
-_/translate_
+_/api/translate_
 
 translate a query into multiple languages simultaneously.
 
@@ -58,7 +58,7 @@ OUTPUT
 ]
 ```
 
-_/languages_
+_/api/languages_
 
 OUTPUT
 an array of all available languages, with names and their appropriate codes:
@@ -71,6 +71,25 @@ an array of all available languages, with names and their appropriate codes:
 ...
 ]
 ```
+_/api/tts_
+
+INPUT
+
+```
+_(as query string)_
+{
+	query: String,
+	language: String,	//	2 or 3 letters, _usually_ the ISO2 language code, small case
+	speed?: Decimal		//	optional, in range [0.2, 1]
+}
+
+e.g.:
+_/api/tts?query=perro&language=es&speed=0.24_
+```
+
+OUTPUT
+mpeg audio 
+
 
 ## Setup
 
