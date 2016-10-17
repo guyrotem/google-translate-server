@@ -13,6 +13,7 @@ function init(databaseUrl) {
 			return deferred.reject(err);
 		} else {
 			pgClient = client;
+			createSchemas();
 			console.log('Connected to PostgreSQL!');
 			printAllStatistics();
 			deferred.resolve();
@@ -20,6 +21,11 @@ function init(databaseUrl) {
 	});
 
 	return deferred.promise;
+}
+
+function createSchemas() {
+	var query = 'CREATE TABLE IF NOT EXISTS usage_statistics (url varchar(50) NOT NULL, count integer NOT NULL);';
+	pgClient.query(query);
 }
 
 function printAllStatistics() {
