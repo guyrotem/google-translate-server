@@ -1,7 +1,11 @@
 language: node_js
 node_js:
-  - '4.5.0'
+- '4.5.0'
 services:
-  - postgresql
+- postgresql
 before_script:
-  - psql -c 'create database google_translate_server;' -U postgres
+- psql -c 'create database google_translate_server;' -U postgres
+env:
+- PORT=9333
+- CLIENT_BASE_DOMAIN=http://localhost:5000
+- DATABASE_URL=postgres:///google_translate_server
