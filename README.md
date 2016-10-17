@@ -97,7 +97,10 @@ Make sure you have npm properly installed.
 
 1.	clone this repo
 2.	_npm install_
-3.	_npm start_
+3.	configure .env file (can be done by running "cp dotEnv .env" in the root of the project)
+4.	_npm start_
+
+**Currently you must have Postgres installed and have a schema called "google_translate_api" configured locally. Until I make a workaround, you should either instatll it properly, or workaround it by removing all references to Postgres**
 
 You may also work in test mode, where translation system is mocked by the data contained in [data.json](https://github.com/guyrotem/google-translate-server/blob/master/test/data.json) file.
 `npm run simulation`
