@@ -4,4 +4,4 @@ node_js:
 services:
   - postgresql
 before_script:
-  - psql -c 'create database google-translate-server;' -U postgres
+  - psql -c 'create database google_translate_server;' -U postgres
