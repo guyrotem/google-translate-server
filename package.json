@@ -22,6 +22,10 @@
   "engines": {
     "node": ">=0.8.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/guyrotem/google-translate-server.git"
+  },
   "main": "scripts/server.js",
   "name": "google-translate-api",
   "readme": "Readme.md",
@@ -33,6 +37,7 @@
     "test-ci": "mocha test/spec/*.js",
     "test-cov": "istanbul cover tape test/spec/*.js"
   },
+  "license": "Apache-2.0",
   "tags": [
     "google",
     "translate",
