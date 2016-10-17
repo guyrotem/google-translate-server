@@ -9,6 +9,8 @@ var tkCalc = require('./../hash/tk-hash');
 var tkkScraper = require('./tkk-scraper');
 var externalApis = () => require('./topology-manager').readTopology().externalApis;
 var googleResponseProcessor = require('./google-response-processor');
+//	TODO: Alternative API exists:
+//https://translate.googleapis.com/translate_a/single?client=gtx&sl=${}&dt=t&tl=${}&q=${}
 
 var tkk = null;
 var languagesList = null;
@@ -29,7 +31,14 @@ function submitTranslation(data) {
 
 	var fullUrl = translateUrl + '?' + querystring.stringify(queryParams);
 
-	return requestPromise(fullUrl)
+	var options = {
+	  url: fullUrl,
+	  headers: {
+	    'Referer': translateUrl
+	  }
+	};
+
+	return requestPromise(options)
 		.catch(res => {
 			return q.reject(res.error);
 		});
