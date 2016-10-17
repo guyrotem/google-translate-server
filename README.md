@@ -12,10 +12,12 @@ Make sure you have npm properly installed.
 
 1.	git clone git@github.com:guyrotem/google-translate-server.git
 2.	_npm install_
-3.	configure .env file (can be done by running "cp dotEnv .env" in the root of the project)
-4.	_npm start_
+3.	type _cp dotEnv .env_ in the root of the project, to create your private environment vars
+4.	install and configure Postgres on your computer (or skip it and disable Postgres. see below)
+	=> Install Postgres => create a local database: **"psql -c 'create database google_translate_server;' -U postgres"** => make sure PostgreSQL is running in the background (the elephant!)
+5.	_npm start_
 
-**Currently you must have Postgres installed and have a schema called "google_translate_server" configured locally (or use a different name, but make sure to rename it in .env as well). Until I make a workaround, you should either instatll it properly, or workaround it by removing all references to Postgres**
+You may also disable Postgres: "sed -i -e 's/ENABLE_PSQL=true/ENABLE_PSQL=false/' .env"
 
 You may also work in test mode, where translation system is mocked by the data contained in [data.json](https://github.com/guyrotem/google-translate-server/blob/master/test/data.json) file.
 `npm run simulation`
