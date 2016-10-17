@@ -7,7 +7,8 @@ describe('TTS tests', () => {
 	before((done) => {
 		env.copyTopology()
 		.then(env.start)
-		.then(() => done());
+		.then(() => done())
+		.catch(err => done(err));
 	});
 
 	after((done) => {

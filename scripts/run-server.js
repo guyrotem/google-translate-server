@@ -10,6 +10,9 @@ function startServer() {
 	require('./load-dot-env')();
 
 	var port = process.env.PORT;
+
+	//	TO REMOVE
+	console.log('starting @ ' + port);
 	
 	server.listen(port, function () {
 	    console.log(`Server listening on: ${port}`);
