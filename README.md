@@ -4,6 +4,8 @@ NodeJS proxy for Google Translate
 
 ### [See demo here](https://google-translate-proxy.herokuapp.com/)
 
+[![Build Status](https://travis-ci.org/guyrotem/google-translate-server.svg?branch=master)](https://travis-ci.org/guyrotem/google-translate-server)
+
 ## ¡¿ Why do I need a proxy ?!
 
 Can't I just call the API used by Google Translate?
