@@ -69,6 +69,10 @@ function submitTts(data) {
 
 function translate(requestData) {
 
+	  if (!isReady()) {
+	    return rejectWithError('server not initialiazed');
+	  }
+
 	console.log(requestData);
 
 	if (!requestData.query || !requestData.sourceLang || (!requestData.targetLang && !requestData.targetLangs)) {
@@ -173,6 +177,13 @@ function resolveWithData(data) {
     var deferred = q.defer();
     deferred.resolve(data);
     return deferred.promise;
+}
+
+function rejectWithError(error) {
+  return {
+    type: 'PROMISE/TEXT',
+    data: q.reject(error)
+  };
 }
 
 module.exports = {

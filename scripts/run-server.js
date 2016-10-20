@@ -13,6 +13,7 @@ function startServer() {
 	//var jsonParser = bodyParser.json();
 	//app.use(bodyParser.urlEncoded());
 	app.get('/', requestHandler);
+	app.get('/robots.text', requestHandler);
 	app.get('/api/*', requestHandler);
 	app.post('/api/*', requestHandler);
 
@@ -24,7 +25,6 @@ function startServer() {
 }
 
 function requestHandler(request, response) {
-
 	try {
   		if (request.method === 'POST') {
 			getPostPayload(request)
