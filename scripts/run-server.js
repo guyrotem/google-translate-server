@@ -13,7 +13,7 @@ function startServer() {
 	//var jsonParser = bodyParser.json();
 	//app.use(bodyParser.urlEncoded());
 	app.get('/', requestHandler);
-	app.get('/robots.text', requestHandler);
+	app.get('/robots.txt', requestHandler);
 	app.get('/api/*', requestHandler);
 	app.post('/api/*', requestHandler);
 
