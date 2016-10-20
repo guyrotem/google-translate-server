@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "bcrypt": "^0.8.7",
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.2",
     "copy": "^0.3.0",
     "express": "^4.14.0",
