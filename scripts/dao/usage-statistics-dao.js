@@ -10,7 +10,7 @@ var updateStatistics = (url, lastCount) => `UPDATE usage_statistics SET count = 
 function incrementUsageCountOp(url) {
 	var deferred = q.defer();
 	var client = sqlDriver.getClient();
-	var select = `SELECT * FROM usage_statistics WHERE url = '${url}'`;
+	var select = getStatistics(url);
 
 	client.query(select, [], function (err, result) {
 		if (err) {

@@ -1,15 +1,22 @@
-var http = require('http');
+var express = require('express');
+var bodyParser = require('body-parser');
 var serverDispatcher = require('./dispatcher');
 var getPostPayload = require('./core/get-post-payload');
 var urlModule = require('url');
 var initManager = require('./init-manager');
 
-var server = http.createServer(requestHandler);
+const app = express();
 
 function startServer() {
 	var port = process.env.PORT;
 	
-	server.listen(port, function () {
+	//var jsonParser = bodyParser.json();
+	//app.use(bodyParser.urlEncoded());
+	app.get('/', requestHandler);
+	app.get('/api/*', requestHandler);
+	app.post('/api/*', requestHandler);
+
+	app.listen(port, function () {
 	    console.log(`Server listening on: ${port}`);
 	});
 
@@ -17,6 +24,7 @@ function startServer() {
 }
 
 function requestHandler(request, response) {
+
 	try {
   		if (request.method === 'POST') {
 			getPostPayload(request)
@@ -81,7 +89,7 @@ function rejectOnError(response, additionalData) {
   var errorMessage = additionalData || 'Unknown Error';
   console.error(errorMessage);
 
-  response.writeHead(502, {'Content-Type': 'application/json'});
+  response.writeHead(503, {'Content-Type': 'application/json'});
   response.end(JSON.stringify({error: errorMessage}));
 }
 

@@ -1,8 +1,12 @@
 {
   "dependencies": {
+    "bcrypt": "^0.8.7",
+    "body-parser": "^1.15.2",
     "copy": "^0.3.0",
+    "express": "^4.14.0",
     "extend": "^3.0.0",
     "fs-promise": "^0.5.0",
+    "passport": "^0.3.2",
     "pg": "6.1.0",
     "phantom": "^2.1.21",
     "q": "^1.4.1",

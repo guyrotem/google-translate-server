@@ -10,7 +10,7 @@ function dispatcher(url, requestBody) {
   console.log('Got request for URL: ' + url);
 
   if (!translateAPI.isReady()) {
-    return q.reject('server not initialiazed');
+    return rejectWithError('server not initialiazed');
   }
 
   usageStatisticsDao.incrementUsageCount(url);
@@ -36,6 +36,13 @@ function serveClient() {
     data: requestModule(url)
   };
 }
+
+function rejectWithError(error) {
+  return {
+    type: 'PROMISE/TEXT',
+    data: q.reject(error)
+  };
+} 
 
 module.exports = {
   request: dispatcher

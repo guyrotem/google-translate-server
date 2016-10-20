@@ -1,5 +1,6 @@
 var request = require('request-promise');
 var q = require('q');
+var qs = require('querystring');
 var env = require('./../environment');
 var assert = require('assert');
 
@@ -66,10 +67,8 @@ function loadMainPage() {
 
 function sendTts(ttsQuery) {
 	var options = {
-	    method: 'POST',
-	    uri: serverBaseDomain + '/api/tts',
-	    body: ttsQuery,
-	    json: true
+	    method: 'GET',
+	    uri: serverBaseDomain + '/api/tts?' + qs.stringify(ttsQuery)
 	};
 
 	return request(options);
