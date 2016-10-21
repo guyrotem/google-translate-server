@@ -40,6 +40,16 @@ function submitTranslation(data) {
 	  }
 	};
 
+	if (data.q.length > 800) {
+		options.formData = {q: data.q};
+
+//	TODO: for long texts we have the following
+		// pc:1
+		// otf:1
+		// tsel:0
+		// kc:15
+	}
+
 	return requestPromise(options)
 		.catch(res => {
 			return q.reject(res.error);
