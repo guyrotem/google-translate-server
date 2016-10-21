@@ -75,6 +75,10 @@ function translate(requestData) {
 	    return rejectWithError(NOT_INITIALIZED_MESSAGE);
 	  }
 
+	  if (requestData.query && requestData.query.length > 800) {
+	  	return rejectWithError("Maximum supported query length is currently 800. Longer queries will be supported soon (query must be sent to Google as form data)");
+	  } 
+
 	console.log(requestData);
 
 	if (!requestData.query || !requestData.sourceLang || (!requestData.targetLang && !requestData.targetLangs)) {
