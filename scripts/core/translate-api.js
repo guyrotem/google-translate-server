@@ -12,6 +12,8 @@ var googleResponseProcessor = require('./google-response-processor');
 //	TODO: Alternative API exists:
 //https://translate.googleapis.com/translate_a/single?client=gtx&sl=${}&dt=t&tl=${}&q=${}
 
+var NOT_INITIALIZED_MESSAGE = 'Server is still waking up, waiting to get a key from Gooogle. Please try again in a few seconds. it happens often on the 1st attempt after an idle period';
+
 var tkk = null;
 var languagesList = null;
 
@@ -70,7 +72,7 @@ function submitTts(data) {
 function translate(requestData) {
 
 	  if (!isReady()) {
-	    return rejectWithError('server not initialiazed');
+	    return rejectWithError(NOT_INITIALIZED_MESSAGE);
 	  }
 
 	console.log(requestData);
@@ -116,9 +118,9 @@ function translate(requestData) {
 
 function tts(requestData) {
 	  if (!isReady()) {
-	    return rejectWithError('server not initialiazed');
+	    return rejectWithError(NOT_INITIALIZED_MESSAGE);
 	  }
-	
+
 	var submitData = {
 		q: requestData.query,	//	encodeURIComponent?
 		tl: requestData.targetLang || requestData.language,
