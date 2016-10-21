@@ -115,6 +115,10 @@ function translate(requestData) {
 }
 
 function tts(requestData) {
+	  if (!isReady()) {
+	    return rejectWithError('server not initialiazed');
+	  }
+	
 	var submitData = {
 		q: requestData.query,	//	encodeURIComponent?
 		tl: requestData.targetLang || requestData.language,
