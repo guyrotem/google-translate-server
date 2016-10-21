@@ -30,7 +30,7 @@ It currently only supports the queries "dog" and "cat", in French, Spanish, Germ
 ## ¡¿ Why do I need a proxy ?!
 
 Can't I just call the API used by Google Translate?
-Well, sure, just open the networking panel of the Dev tools and see where the request goes.
+Well, sure, just open the networking panel of the Dev tools and see where the requests go.
 You would notice that the API requires around a dozen parameters, most of which you will quickly understand or walk around them easily.
 ...except for "tk", which has some random-looking values: e.g.: "258417.372466". Try to fake it with random values, and you will get HTTP status 403 (Forbidden).
 It turns out that "_tk_" is a hash value based on your query (the string you wish to translate) and some private key (called TKK), which is embedded in your DOM when you load the Google translate page. This private key changes every hour (but it seems that old keys can be used for quite a long time before they actually expire).
@@ -43,24 +43,35 @@ As a conclusion, in order to use Google's API directly, you would have to:
 3) call the AJAX API with (query, tk, targetLang, sourceLang, ...) and some more irrelevant fields
 4) parse the result to get the data you wished for (which is not as straight forward as you'd might expect)
 
-The API result is made of arrays of arrays (like a JSON that was stripped out of its labels), so you need to figure out on your own what every field means. Moreover, there are at least 4 different result formats (depending on the target language, complexity of the query, etc.) so you must learn to adapt.
+The API result is made of arrays of arrays (like a JSON that was stripped out of its labels), so you are left to figure out what every field means. Moreover, there are at least 4 different result formats (depending on the target language, complexity of the query, etc.) so you must learn to adapt.
 
 **This proxy API does all that for you!**
 
 ## APIs
-_/api/translate_
+
+> /api/translate > /api/languages > /api/tts
+
+### _/api/translate_
 
 translate a query into multiple languages simultaneously.
 
-INPUT: 
+INPUT:
+
+for multiple languages, use POST with the following JSON body:
 ```
 {
 	query: String,
 	sourceLang: String,	//	2 or 3 letters, _usually_ the ISO2 language code, small case
+	targetLangs: String[],	//	USE targetLangs (array) to translate to multiple target languages in the same call
+}
 
-	// Use exactly one of the following two (XOR)!
-	targetLangs?: String[],	//	USE targetLangs (array) to translate to multiple target languages in the same call
-	targetLang?: String,	//      USE targetLang (string) to translate to a single target langauge
+```
+for a single target language, you may use GET with the following query string:
+```
+{
+	query: String,
+	sourceLang: String,	//	2 or 3 letters, _usually_ the ISO2 language code, small case
+	targetLang: String,	//      USE targetLang (string) to translate to a single target langauge
 }
 ```
 
@@ -83,11 +94,11 @@ OUTPUT
 ]
 ```
 
-> to use multiple target languages simultaneously, use POST, specifying the parameters in the request body.
-> to use a single target language, you may also use GET, e.g.:
-    https://google-translate-proxy.herokuapp.com/api/translate?query=where%20are%20my%20sunglasses&targetLang=de&sourceLang=en
+> EXAMPLE: https://google-translate-proxy.herokuapp.com/api/translate?query=where%20are%20my%20sunglasses&targetLang=de&sourceLang=en
 
-_/api/languages_
+### _/api/languages_
+
+INPUT: [no input arguments]
 
 OUTPUT
 an array of all available languages, with names and their appropriate codes:
@@ -100,24 +111,25 @@ an array of all available languages, with names and their appropriate codes:
 ...
 ]
 ```
-_/api/tts_
+> EXAMPLE: https://google-translate-proxy.herokuapp.com/api/languages
 
-INPUT
+### _/api/tts_
+
+INPUT: GET (as query string)
 
 ```
-_(as query string)_
 {
 	query: String,
 	language: String,	//	2 or 3 letters, _usually_ the ISO2 language code, small case
 	speed?: Decimal		//	optional, in range [0.2, 1]
 }
-
-e.g.:
-https://google-translate-proxy.herokuapp.com/api/tts?query=perro&language=es&speed=0.24
 ```
 
 OUTPUT
 mpeg audio 
+
+EXAMPLE:
+https://google-translate-proxy.herokuapp.com/api/tts?query=perro&language=es&speed=0.24
 
 ## Sample client using this API
 
