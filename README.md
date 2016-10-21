@@ -64,8 +64,9 @@ for multiple languages, use POST with the following JSON body:
 	sourceLang: String,	//	2 or 3 letters, _usually_ the ISO2 language code, small case
 	targetLangs: String[],	//	USE targetLangs (array) to translate to multiple target languages in the same call
 }
-
 ```
+**NOTE: maximal supported query length is currently around 850 characters. it will be fixed soon. Longer queries should be sent to Google as form-data**
+
 for a single target language, you may use GET with the following query string:
 ```
 {
