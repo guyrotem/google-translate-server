@@ -14,7 +14,7 @@ function dispatcher(url, requestBody) {
   if (url === '/') {
     return serveClient();
   } else if (url === '/robots.txt') {
-    return {type: 'PROMISE/TEXT', data: q.resolve(''), contentType: 'text/plain'}
+    return {type: 'PROMISE/TEXT', data: q.resolve('User-agent: *\nDisallow:\n'), contentType: 'text/plain'}
   } else if (url === '/api/translate') {
     return translateAPI.translate(requestBody);
   } else if (url === '/api/tts') {

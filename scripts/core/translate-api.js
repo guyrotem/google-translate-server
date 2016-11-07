@@ -40,15 +40,16 @@ function submitTranslation(data) {
 	  }
 	};
 
-	if (data.q.length > 800) {
-		options.formData = {q: data.q};
+	//if (data.q.length > 800) {
+		//options.formData = {q: data.q};
+		//delete q.data;
 
 //	TODO: for long texts we have the following
 		// pc:1
 		// otf:1
 		// tsel:0
 		// kc:15
-	}
+	//}
 
 	return requestPromise(options)
 		.catch(res => {
@@ -86,7 +87,7 @@ function translate(requestData) {
 	  }
 
 	  if (requestData.query && requestData.query.length > 800) {
-	  	return rejectWithError("Maximum supported query length is currently 800. Longer queries will be supported soon (query must be sent to Google as form data)");
+	  	return rejectWithError('Maximum supported query length is currently 800. Longer queries will be supported soon (query must be sent to Google as form data)');
 	  } 
 
 	console.log(requestData);

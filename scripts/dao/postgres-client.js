@@ -10,7 +10,7 @@ function init(databaseUrl) {
 		pg.defaults.ssl = false;
 		pg.connect(databaseUrl, function(err, client) {
 			if (err) {
-				console.log('FAILED to connect to POSTGRES database. Make sure it is up!');
+				console.error('\nFAILED to connect to POSTGRES database. Make sure it is up!\n');
 				return deferred.reject(err);
 			} else {
 				pgClient = client;

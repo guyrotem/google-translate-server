@@ -12,6 +12,8 @@ function startServer() {
 	
 	//var jsonParser = bodyParser.json();
 	//app.use(bodyParser.urlEncoded());
+	
+	//	TODO: use express...
 	app.get('/', requestHandler);
 	app.get('/robots.txt', requestHandler);
 	app.get('/api/*', requestHandler);
@@ -24,6 +26,7 @@ function startServer() {
 	return initManager.start();
 }
 
+//	TODO: replace it with express
 function requestHandler(request, response) {
 	try {
   		if (request.method === 'POST') {
