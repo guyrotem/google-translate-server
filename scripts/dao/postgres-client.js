@@ -31,8 +31,10 @@ function init(databaseUrl) {
 function createSchemas() {
 	var query1 = 'CREATE TABLE IF NOT EXISTS usage_statistics (url varchar(50) NOT NULL, count integer NOT NULL);';
 	var query2 = 'CREATE TABLE IF NOT EXISTS user_info (username varchar(50) NOT NULL, hash varchar(50) NOT NULL);';
+	var query3 = 'CREATE TABLE IF NOT EXISTS tkk_history (key varchar(32) NOT NULL, time TIMESTAMP DEFAULT CURRENT_TIMESTAMP);';
 	pgClient.query(query1);
 	pgClient.query(query2);
+	pgClient.query(query3);
 }
 
 function printAllStatistics() {

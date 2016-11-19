@@ -6,6 +6,8 @@ var queue = new actionsQueue();
 var getStatistics = (url) => `SELECT * FROM usage_statistics WHERE url = '${url}'`;
 var addStatistics = (url, lastCount) => `INSERT INTO usage_statistics (count, url) VALUES(${lastCount + 1}, '${url}')`;
 var updateStatistics = (url, lastCount) => `UPDATE usage_statistics SET count = ${lastCount + 1} WHERE url = '${url}'`;
+var addTkkQuery = (key) => `INSERT INTO tkk_history (key) VALUES(${key})`;
+var getNewestTkkQuery = `SELECT * FROM tkk_history ORDER BY time DESC LIMIT 1`;
 
 function incrementUsageCountOp(url) {
 	var deferred = q.defer();
@@ -34,10 +36,50 @@ function incrementUsageCountOp(url) {
 	return deferred.promise;
 }
 
+function addTkk(key) {
+	var deferred = q.defer();
+	var client = sqlDriver.getClient();
+	var query = addTkkQuery(key);
+
+	client.query(query, [], function (err, result) {
+		if (err) {
+			console.log(err);
+			return deferred.reject(err);
+		} else {
+			console.log('added TKK successfully');
+			return deferred.resolve();
+		}
+	});
+
+	return deferred.promise;
+}
+
+function getLastTkk() {
+	var deferred = q.defer();
+	var client = sqlDriver.getClient();
+	var query = getNewestTkkQuery;
+
+	client.query(query, [], function (err, result) {
+		if (err) {
+			console.log(err);
+			return deferred.reject(err);
+		} else if (result.rows.length === 0) {
+			return deferred.resolve(null);
+		} else {
+			var lastKey = result.rows[0].key;
+			return deferred.resolve(lastKey);
+		}
+	});
+
+	return deferred.promise;
+}
+
 function incrementUsageCount(url) {
 	queue.runLater(incrementUsageCountOp, [url]);
 }
 
 module.exports = {
-	incrementUsageCount: incrementUsageCount
+	incrementUsageCount: incrementUsageCount,
+	addTkk: addTkk,
+	getLastTkk: getLastTkk
 };

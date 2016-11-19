@@ -9,6 +9,7 @@ var tkCalc = require('./../hash/tk-hash');
 var tkkScraper = require('./tkk-scraper');
 var externalApis = () => require('./topology-manager').readTopology().externalApis;
 var googleResponseProcessor = require('./google-response-processor');
+var usageStatisticsDao = require('./../dao/usage-statistics-dao');
 //	TODO: Alternative API exists:
 //https://translate.googleapis.com/translate_a/single?client=gtx&sl=${}&dt=t&tl=${}&q=${}
 
@@ -152,9 +153,15 @@ function tts(requestData) {
 
 function refreshTkk() {
 	return tkkScraper.run()
-		.then(res => {
-			console.log('Key retrieved ' + res);
-			tkk = res;
+		.then(newTkk => {
+			console.log('Key retrieved ' + newTkk);
+
+			var oldTkk = tkk;
+			tkk = newTkk;
+
+			if (oldTkk !== newTkk) {
+				return usageStatisticsDao.addTkk(newTkk);
+			}
 		});
 }
 
@@ -169,6 +176,14 @@ function loadLanguages() {
 function isReady() { return tkk !== null && languagesList !== null; }
 
 function initServer() {
+	usageStatisticsDao.getLastTkk()
+		.then((lastTkk) => {
+			if (tkk === null) {
+				console.log(`Pre-loaeded last TKK: ${lastTkk}`);
+				tkk = lastTkk;
+			}
+		});
+
 	return q.all([fetchTkkWithExponentialBackoff(), loadLanguages()])
 		.then(() => {setInterval(refreshTkk, 45 * 60 * 1000);});
 }
