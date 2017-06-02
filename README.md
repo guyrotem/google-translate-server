@@ -6,8 +6,10 @@ supplying a simple API to get you through Google's blocking of the public API fo
 _see APIs below_
 
 ### [See live demo here](https://google-translate-proxy.herokuapp.com/)
-
 [![Build Status](https://travis-ci.org/guyrotem/google-translate-server.svg?branch=master)](https://travis-ci.org/guyrotem/google-translate-server)
+
+IMPORTANT: _as it is deployed to a free Heroku server, it has limited dynos quota per month. if you need to make extensive use, 
+please don't overload this server and deploy your own one... I started reaching my monthly quota in the last few months, so by the end of the month no one could use it.._
 
 ## Setup
 
