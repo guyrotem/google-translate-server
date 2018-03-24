@@ -16,7 +16,16 @@ var usageStatisticsDao = require('./../dao/usage-statistics-dao');
 var NOT_INITIALIZED_MESSAGE = 'Server is still waking up, waiting to get a key from Gooogle. Please try again in a few seconds. it happens often on the 1st attempt after an idle period';
 
 var tkk = null;
-var languagesList = null;
+var languagesList = [{
+	  "name": "English",
+	  "code": "en"
+	}, {
+	  "name": "Spanish",
+	  "code": "es"
+	}, {
+	  "name": "French",
+	  "code": "fr"
+	}];
 
 function submitTranslation(data) {
 	var translateUrl = externalApis().googleTranslateApi;
@@ -228,4 +237,4 @@ module.exports = {
 	tts: tts,
 	getLanguagesList: getLanguagesList,
 	isReady: isReady
-}
+};
