@@ -11,7 +11,7 @@ function startServer() {
 	var port = process.env.PORT;
 	
 	//var jsonParser = bodyParser.json();
-	//app.use(bodyParser.urlEncoded());
+	//app.use(bodyParser.json());
 	
 	//	TODO: use express...
 	app.get('/', requestHandler);
