@@ -15,6 +15,7 @@ var usageStatisticsDao = require('./../dao/usage-statistics-dao');
 
 var NOT_INITIALIZED_MESSAGE = 'Server is still waking up, waiting to get a key from Gooogle. Please try again in a few seconds. it happens often on the 1st attempt after an idle period';
 
+var lastGoogleRateLimitError = null;
 var tkk = null;
 var languagesList = [{
 	  "name": "English",
@@ -60,9 +61,13 @@ function submitTranslation(data) {
 		// tsel:0
 		// kc:15
 	//}
+	var captchaPageError = 'This page appears when Google automatically detects requests coming from your computer network which appear to be in violation of the';
 
 	return requestPromise(options)
 		.catch(res => {
+			if (res.error.indexOf(captchaPageError) > -1) {
+				lastGoogleRateLimitError = new Date();
+			}
 			return q.reject(res.error);
 		});
 }
@@ -91,14 +96,17 @@ function submitTts(data) {
 }
 
 function translate(requestData) {
+	if (!isReady()) {
+		return rejectWithError(NOT_INITIALIZED_MESSAGE);
+	}
 
-	  if (!isReady()) {
-	    return rejectWithError(NOT_INITIALIZED_MESSAGE);
-	  }
+	if (requestData.query && requestData.query.length > 800) {
+		return rejectWithError('Maximum supported query length is currently 800. Longer queries will be supported soon (query must be sent to Google as form data)');
+	}
 
-	  if (requestData.query && requestData.query.length > 800) {
-	  	return rejectWithError('Maximum supported query length is currently 800. Longer queries will be supported soon (query must be sent to Google as form data)');
-	  } 
+	if (killFeature()) {
+		return rejectWithError('Google detected too many requests submitted from this IP. service is temporarily not available');
+	}
 
 	console.log(requestData);
 
@@ -139,6 +147,15 @@ function translate(requestData) {
 		contentType: 'application/json',
 		data: responsePromise
 	}
+}
+
+function killFeature() {
+	return lastGoogleRateLimitError !== null && lessThanFourHoursAgo(lastGoogleRateLimitError);
+}
+
+function lessThanFourHoursAgo(time) {
+	var FOUR_HOURS = 4 * 60 * 60 * 1000;
+	return ((new Date()) - time) < FOUR_HOURS;
 }
 
 function tts(requestData) {
