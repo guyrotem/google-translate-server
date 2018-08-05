@@ -105,7 +105,9 @@ function translate(requestData) {
 	}
 
 	if (killFeature()) {
-		return rejectWithError('Google detected too many requests submitted from this IP. service is temporarily not available');
+		return rejectWithError('Google detected too many requests submitted from this IP. service is temporarily unavailable.' + 
+			'\nViolation detected at: ' + lastGoogleRateLimitError.toString() + '.' +
+			'.\nTrying again in ' + (4 - (new Date() - lastGoogleRateLimitError) / 1000 / 60 / 60) + ' hours.');
 	}
 
 	console.log(requestData);
