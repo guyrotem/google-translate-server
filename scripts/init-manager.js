@@ -6,7 +6,12 @@ function start() {
 	topologyManager.init();
 
 	return postgresDb.init(process.env.DATABASE_URL)
-		.then(() => translateAPI.init());
+		.then(() => translateAPI.init())
+		.then((closeHandler) => {
+			return {
+				stop: () => closeHandler.close()
+			}
+		});
 }
 
 module.exports = {

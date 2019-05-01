@@ -24,7 +24,7 @@ function startServer() {
 		console.log(`Server listening on: ${port}`);
 	});
 
-	return initManager.start().then(() => {
+	return initManager.start().then((initManagerStopHandle) => {
 		return {
 			stop: () => {
 				const deferred = q.defer();
@@ -33,7 +33,7 @@ function startServer() {
 					deferred.resolve();
 				});
 
-				return deferred.promise;
+				return q.all([deferred.promise, initManagerStopHandle.stop()]);
 			}
 		}
 	});

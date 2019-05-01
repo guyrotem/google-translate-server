@@ -213,7 +213,12 @@ function initServer() {
 		});
 
 	return q.all([fetchTkkWithExponentialBackoff(), loadLanguages()])
-		.then(() => {setInterval(refreshTkk, 45 * 60 * 1000);});
+		.then(() => {
+			const interval = setInterval(refreshTkk, 45 * 60 * 1000);
+			return {
+				close: () => clearInterval(interval)
+			}
+		});
 }
 
 function fetchTkkWithExponentialBackoff() {

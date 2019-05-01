@@ -39,7 +39,7 @@
     "lint": "eslint lib/ *.js test/ && echo Lint passed.",
     "test": "npm run lint && npm run test-ci",
     "test-browser": "node test/browser/start.js",
-    "test-ci": "mocha test/spec/*.js --exit",
+    "test-ci": "mocha test/spec/*.js",
     "test-cov": "nyc mocha test/spec/*.js"
   },
   "license": "Apache-2.0",
