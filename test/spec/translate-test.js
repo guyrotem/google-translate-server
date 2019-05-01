@@ -11,9 +11,8 @@ describe('TTS tests', () => {
 		.catch(err => done(err));
 	});
 
-	after((done) => {
-		env.stop()
-		.then(() => done());
+	after(() => {
+		return env.stop();
 	});
 
 	it('should load client main page', () => {
@@ -40,7 +39,7 @@ describe('TTS tests', () => {
 
 		return sendTts(ttsQuery)
 			.then((response) => {
-				assert.equal(response.data.length, 3862);// 3911);
+				assert.equal(response.data.length, 3862);
 			});
 	});
 
