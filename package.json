@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "axios": "^0.18.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.2",
     "copy": "^0.3.0",
@@ -10,9 +11,7 @@
     "pg": "6.1.0",
     "phantom": "^2.1.21",
     "q": "^1.4.1",
-    "querystring": "^0.2.0",
-    "request": "^2.75.0",
-    "request-promise": "^4.1.1"
+    "querystring": "^0.2.0"
   },
   "config": {
     "port": 9333
@@ -24,7 +23,7 @@
     "mocha": "^6.1.4"
   },
   "engines": {
-    "node": ">=0.8.0"
+    "node": "8.9.0"
   },
   "repository": {
     "type": "git",
