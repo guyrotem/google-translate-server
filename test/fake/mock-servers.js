@@ -10,19 +10,19 @@ var fakeTtsPort = 9443;	//
 var fakeClientPort = 5000;	//	NOTE: from env variables
 
 function startAll() {
-	var fakeServerPromise = fakeTkkServer.start(fakeTkkPort)
+	const fakeServerPromise = fakeTkkServer.start(fakeTkkPort)
 		.then(data => {
 			console.log('Fake TKK server started!');
 		});
-	var fakeGooglePromise = fakeGoogleServer.start(fakeGooglePort)
+	const fakeGooglePromise = fakeGoogleServer.start(fakeGooglePort)
 		.then(data => {
 			console.log('Fake Google server started!');
 		});
-	var fakeTtsPromise = fakeTtsServer.start(fakeTtsPort)
+	const fakeTtsPromise = fakeTtsServer.start(fakeTtsPort)
 		.then(data => {
 			console.log('Fake TTS server started!');
 		});
-	var fakeClientPromise = fakeClientExpressServer.start(fakeClientPort)
+	const fakeClientPromise = fakeClientExpressServer.start(fakeClientPort)
 		.then(data => {
 			console.log('Fake Client started!');
 		});
@@ -48,4 +48,4 @@ module.exports = {
 		googleTtsServer: fakeTtsServer,
 		clientFileServer: fakeClientExpressServer
 	}
-}
+};

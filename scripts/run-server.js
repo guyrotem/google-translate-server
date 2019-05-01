@@ -4,26 +4,39 @@ var serverDispatcher = require('./dispatcher');
 var getPostPayload = require('./core/get-post-payload');
 var urlModule = require('url');
 var initManager = require('./init-manager');
+var q = require('q');
 
 const app = express();
 
 function startServer() {
-	var port = process.env.PORT;
-	
+	const port = process.env.PORT;
+
 	//var jsonParser = bodyParser.json();
 	//app.use(bodyParser.json());
-	
+
 	//	TODO: use express...
 	app.get('/', requestHandler);
 	app.get('/robots.txt', requestHandler);
 	app.get('/api/*', requestHandler);
 	app.post('/api/*', requestHandler);
 
-	app.listen(port, function () {
-	    console.log(`Server listening on: ${port}`);
+	const closeHandle = app.listen(port, function () {
+		console.log(`Server listening on: ${port}`);
 	});
 
-	return initManager.start();
+	return initManager.start().then(() => {
+		return {
+			stop: () => {
+				const deferred = q.defer();
+
+				closeHandle.close(() => {
+					deferred.resolve();
+				});
+
+				return deferred.promise;
+			}
+		}
+	});
 }
 
 //	TODO: replace it with express

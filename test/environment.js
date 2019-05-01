@@ -2,20 +2,20 @@ var q = require('q');
 var fs = require('fs');
 var tkHash = require('./../scripts/hash/tk-hash');
 var mockServers = require('./fake/mock-servers');
+var serverFactory = require('./../scripts/run-server');
+var server;
 
 function runMocks() {
-	var mockServerAlive = setupMocks();
-	var serverAlive = startServer();
+	const collaborators = setupMocks();
+	server = serverFactory.startServer();
 
-	return q.all([mockServerAlive, serverAlive]);
+	return q.all([collaborators, server]);
 }
 
 function stop() {
-	return mockServers.stopAll();
-}
-
-function startServer() {
-	return require(__dirname + './../scripts/run-server').startServer();
+	return server.then(closeHandler => {
+		return q.all([closeHandler.stop(), mockServers.stopAll()]);
+	});
 }
 
 function setupMocks() {
