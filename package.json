@@ -11,7 +11,9 @@
     "pg": "6.1.0",
     "phantom": "^2.1.21",
     "q": "^1.4.1",
-    "querystring": "^0.2.0"
+    "querystring": "^0.2.0",
+    "request": "^2.75.0",
+    "request-promise": "^4.1.1"
   },
   "config": {
     "port": 9333
