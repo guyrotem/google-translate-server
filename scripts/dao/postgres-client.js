@@ -1,14 +1,16 @@
-var pg = require('pg');
-var q = require('q');
+const pg = require('pg');
+const q = require('q');
 
 var pgClient;
 
 function init(databaseUrl) {
-	var deferred = q.defer();
+	const deferred = q.defer();
 
 	if (process.env.ENABLE_PSQL === 'true') {
 		pg.defaults.ssl = false;
-		pg.connect(databaseUrl, function(err, client) {
+		const pool = new pg.Pool();
+
+		pool.connect(databaseUrl, function(err, client) {
 			if (err) {
 				console.error('\nFAILED to connect to POSTGRES database. Make sure it is up!\n');
 				return deferred.reject(err);
@@ -17,12 +19,12 @@ function init(databaseUrl) {
 				createSchemas();
 				console.log('Connected to PostgreSQL!');
 				printAllStatistics();
-				deferred.resolve();
+				deferred.resolve({close: pool.end});
 			}
 		});
 	} else {
 		pgClient = new PgClientMock();
-		deferred.resolve('MOCK');
+		deferred.resolve({close: () => {}});
 	}
 
 	return deferred.promise;
