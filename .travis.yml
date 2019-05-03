@@ -8,4 +8,4 @@ before_script:
 addons:
   postgresql: "11"
 env:
-- PORT=9333 CLIENT_BASE_DOMAIN=http://localhost:5000 DB_NAME=google_translate_server DB_USER=postgres DB_PASS= ENABLE_PSQL=true
+- PORT=9333 CLIENT_BASE_DOMAIN=http://localhost:5000 ENABLE_PSQL=true DATABASE_URL=postgresql://postgres:1234@localhost/google_translate_server
