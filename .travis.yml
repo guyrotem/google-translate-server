@@ -5,5 +5,7 @@ services:
 - postgresql
 before_script:
 - psql -c 'create database google_translate_server;' -U postgres
+addons:
+  postgresql: "11"
 env:
-- PORT=9333 CLIENT_BASE_DOMAIN=http://localhost:5000 DATABASE_URL=postgres:///google_translate_server ENABLE_PSQL=true
+- PORT=9333 CLIENT_BASE_DOMAIN=http://localhost:5000 DB_NAME=google_translate_server DB_USER=postgres DB_PASS= DB_PORT= ENABLE_PSQL=true PGPORT=5432 DB_PORT=5432
