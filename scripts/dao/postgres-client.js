@@ -3,11 +3,11 @@ const q = require('q');
 
 var pgClient;
 
-function init(userName, password, dbName, port) {
+function init(userName, password, dbName) {
 	const deferred = q.defer();
 	if (process.env.ENABLE_PSQL === 'true') {
 		pg.defaults.ssl = false;
-		const connectionString = `postgresql://${userName}:${password}@localhost:${port}/${dbName}`;
+		const connectionString = `postgresql://${userName}:${password}@localhost/${dbName}`;
 		pgClient = new pg.Client({connectionString: connectionString});
 
 		pgClient.connect(function(err) {
