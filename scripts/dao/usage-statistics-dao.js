@@ -55,11 +55,10 @@ function addTkk(key) {
 }
 
 function getLastTkk() {
-	var deferred = q.defer();
-	var client = sqlDriver.getClient();
-	var query = getNewestTkkQuery;
+	const deferred = q.defer();
+	const client = sqlDriver.getClient();
 
-	client.query(query, [], function (err, result) {
+	client.query(getNewestTkkQuery, [], function (err, result) {
 		if (err) {
 			console.log(err);
 			return deferred.reject(err);

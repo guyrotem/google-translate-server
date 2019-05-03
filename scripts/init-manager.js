@@ -6,14 +6,19 @@ const q = require('q');
 function start() {
 	topologyManager.init();
 
-	return q.all([
-		postgresDb.init(process.env.DATABASE_URL),
-		translateAPI.init()
-	]).then((closeHandlers => {
-		return {
-			stop: () => closeHandlers.forEach((handle) => { handle.close(); })
-		}
-	}));
+	const shutdownHandles = [];
+
+	return postgresDb.init(process.env.DB_USER, process.env.DB_PASS, process.env.DB_NAME, process.env.DB_PORT)
+		.then(handle => shutdownHandles.push(handle))
+		.then(() => translateAPI.init())
+		.then(handle => shutdownHandles.push(handle))
+		.then(() =>  {
+			return {
+				stop: () => shutdownHandles.forEach((handle) => {
+					handle.close();
+				})
+			}
+		});
 }
 
 module.exports = {

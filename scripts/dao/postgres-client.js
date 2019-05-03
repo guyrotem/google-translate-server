@@ -3,23 +3,23 @@ const q = require('q');
 
 var pgClient;
 
-function init(databaseUrl) {
+function init(userName, password, dbName, port) {
 	const deferred = q.defer();
-
 	if (process.env.ENABLE_PSQL === 'true') {
 		pg.defaults.ssl = false;
-		const pool = new pg.Pool();
+		const connectionString = `postgresql://${userName}:${password}@localhost:${port}/${dbName}`;
+		pgClient = new pg.Client({connectionString: connectionString});
 
-		pool.connect(databaseUrl, function(err, client) {
+		pgClient.connect(function(err) {
 			if (err) {
 				console.error('\nFAILED to connect to POSTGRES database. Make sure it is up!\n');
+				console.error(err);
 				return deferred.reject(err);
 			} else {
-				pgClient = client;
 				createSchemas();
 				console.log('Connected to PostgreSQL!');
 				printAllStatistics();
-				deferred.resolve({close: pool.end});
+				deferred.resolve({close: () => pgClient.end()});
 			}
 		});
 	} else {
@@ -31,9 +31,9 @@ function init(databaseUrl) {
 }
 
 function createSchemas() {
-	var query1 = 'CREATE TABLE IF NOT EXISTS usage_statistics (url varchar(50) NOT NULL, count integer NOT NULL);';
-	var query2 = 'CREATE TABLE IF NOT EXISTS user_info (username varchar(50) NOT NULL, hash varchar(50) NOT NULL);';
-	var query3 = 'CREATE TABLE IF NOT EXISTS tkk_history (key varchar(32) NOT NULL, time TIMESTAMP DEFAULT CURRENT_TIMESTAMP);';
+	const query1 = 'CREATE TABLE IF NOT EXISTS usage_statistics (url varchar(50) NOT NULL, count integer NOT NULL);';
+	const query2 = 'CREATE TABLE IF NOT EXISTS user_info (username varchar(50) NOT NULL, hash varchar(50) NOT NULL);';
+	const query3 = 'CREATE TABLE IF NOT EXISTS tkk_history (key varchar(32) NOT NULL, time TIMESTAMP DEFAULT CURRENT_TIMESTAMP);';
 	pgClient.query(query1);
 	pgClient.query(query2);
 	pgClient.query(query3);
@@ -42,8 +42,8 @@ function createSchemas() {
 function printAllStatistics() {
 	pgClient
 	  	.query('SELECT * FROM usage_statistics;')
-	  	.on('row', function(row) {
-	      console.log(JSON.stringify(row));
+	  	.then(function(response) {
+	      console.log(JSON.stringify(response.rows));
 	    });
 }
 
@@ -57,4 +57,4 @@ PgClientMock.prototype.query = function (a, b, callback) {
 module.exports = {
 	init: init,
 	getClient: () => pgClient
-}
+};

@@ -19,7 +19,7 @@ Make sure you have npm properly installed.
 2.	_npm install_
 3.	type _cp dotEnv .env_ in the root of the project, to create your private environment vars
 4.	install and configure Postgres on your computer (or skip it and disable Postgres. see below)
-	=> Install Postgres => create a local database: **"psql -c 'create database google_translate_server;' -U postgres"** => make sure PostgreSQL is running in the background (the elephant!)
+	=> Install Postgres => create a local database: **"psql -c 'create database google_translate_server;' -U postgres"** => configure .env with the correct local credentials: username/password/port (defaults are postgres/1234/5432) => make sure PostgreSQL is running in the background.
 5.	_npm start_
 
 You may also disable Postgres: "sed -i -e 's/ENABLE_PSQL=true/ENABLE_PSQL=false/' .env"
