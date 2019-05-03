@@ -8,7 +8,7 @@ function start() {
 
 	const shutdownHandles = [];
 
-	return postgresDb.init(process.env.DB_USER, process.env.DB_PASS, process.env.DB_NAME)
+	return postgresDb.init(process.env.DATABASE_URL)
 		.then(handle => shutdownHandles.push(handle))
 		.then(() => translateAPI.init())
 		.then(handle => shutdownHandles.push(handle))
