@@ -1,5 +1,7 @@
 # google-translate-server
 
+### *Update 1/1/2021: Google has recently changed the translate API, so the solution suggested here does no longer work. I may provide an alternative solution in the future, but no ETA, sorry*
+
 NodeJS proxy for Google Translate & TTS services.
 
 supplying a simple API to get you through Google's blocking of the public API for free.
