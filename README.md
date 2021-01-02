@@ -1,6 +1,8 @@
 # google-translate-server
 
-### *Update 3/1/2021*:
+## Important updates
+
+### *3/1/2021*:
 Since around December 1st 2020, Google translate started using a newer API version. the older API discussed here still works, BUT:
 1) new TKK values are no longer available when loading the site.
 2) old TKK values still work, but who knows for how long (or when the old API will be removed completely).
@@ -20,8 +22,12 @@ Below are some TKKs:
 
 445111.1710346305
 
-### *Update 1/1/2021*:
+### *1/1/2021*:
 Google has recently changed the translate API, so the solution suggested here does no longer work. I may provide an alternative solution in the future, but no ETA, sorry
+
+[End of updates]
+
+----------------------------
 
 NodeJS proxy for Google Translate & TTS services.
 
