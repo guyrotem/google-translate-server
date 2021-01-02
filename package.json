@@ -25,7 +25,7 @@
     "nyc": "^14.0.0"
   },
   "engines": {
-    "node": "8.9.0"
+    "node": "12.19.0"
   },
   "repository": {
     "type": "git",
@@ -36,7 +36,7 @@
   "readme": "Readme.md",
   "scripts": {
     "simulation": "node test/start-mock.js",
-    "lint": "eslint scripts/ *.js test/ && echo Lint passed.",
+    "lint": "eslint scripts/ test/ && echo Lint passed.",
     "test": "npm run lint && npm run test-ci",
     "test-browser": "node test/browser/start.js",
     "test-ci": "mocha test/spec/*.js",
