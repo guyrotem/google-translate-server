@@ -1,36 +1,36 @@
-var request = require('request');
-var requestPromise = require('request-promise');
-var querystring = require('querystring');
-var extend = require('extend');
-var fs = require('fs-promise');
-var q = require('q');
+const request = require('request');
+const requestPromise = require('request-promise');
+const querystring = require('querystring');
+const extend = require('extend');
+const fs = require('fs-promise');
+const q = require('q');
 
-var tkCalc = require('./../hash/tk-hash');
-var tkkScraper = require('./tkk-scraper');
-var externalApis = () => require('./topology-manager').readTopology().externalApis;
-var googleResponseProcessor = require('./google-response-processor');
-var usageStatisticsDao = require('./../dao/usage-statistics-dao');
+const tkCalc = require('./../hash/tk-hash');
+const tkkScraper = require('./tkk-scraper');
+const externalApis = () => require('./topology-manager').readTopology().externalApis;
+const googleResponseProcessor = require('./google-response-processor');
+const usageStatisticsDao = require('./../dao/usage-statistics-dao');
 //	TODO: Alternative API exists:
 //https://translate.googleapis.com/translate_a/single?client=gtx&sl=${}&dt=t&tl=${}&q=${}
 
-var NOT_INITIALIZED_MESSAGE = 'Server is still waking up, waiting to get a key from Gooogle. Please try again in a few seconds. it happens often on the 1st attempt after an idle period';
+const NOT_INITIALIZED_MESSAGE = 'Server is still waking up, waiting to get a key from Gooogle. Please try again in a few seconds. it happens often on the 1st attempt after an idle period';
 
-var lastGoogleRateLimitError = null;
-var tkk = null;
-var languagesList = [{
-	  "name": "English",
-	  "code": "en"
-	}, {
-	  "name": "Spanish",
-	  "code": "es"
-	}, {
-	  "name": "French",
-	  "code": "fr"
-	}];
+let lastGoogleRateLimitError = null;
+let tkk = null;
+let languagesList = [{
+	"name": "English",
+	"code": "en"
+}, {
+	"name": "Spanish",
+	"code": "es"
+}, {
+	"name": "French",
+	"code": "fr"
+}];
 
 function submitTranslation(data) {
-	var translateUrl = externalApis().googleTranslateApi;
-	var queryParams = extend({
+	const translateUrl = externalApis().googleTranslateApi;
+	const queryParams = extend({
 		client: 't',
 		hl: 'en',
 		dt: ['at', 'bd', 'ex', 'ld', 'md', 'qca', 'rw', 'rm', 'ss', 't'],
@@ -42,13 +42,13 @@ function submitTranslation(data) {
 		kc: '1'
 	}, data);
 
-	var fullUrl = translateUrl + '?' + querystring.stringify(queryParams);
+	const fullUrl = translateUrl + '?' + querystring.stringify(queryParams);
 
-	var options = {
-	  url: fullUrl,
-	  headers: {
-	    'Referer': translateUrl
-	  }
+	const options = {
+		url: fullUrl,
+		headers: {
+			'Referer': translateUrl
+		}
 	};
 
 	//if (data.q.length > 800) {
@@ -61,7 +61,7 @@ function submitTranslation(data) {
 		// tsel:0
 		// kc:15
 	//}
-	var captchaPageError = 'This page appears when Google automatically detects requests coming from your computer network which appear to be in violation of the';
+	const captchaPageError = 'This page appears when Google automatically detects requests coming from your computer network which appear to be in violation of the';
 
 	return requestPromise(options)
 		.catch(res => {
@@ -73,23 +73,23 @@ function submitTranslation(data) {
 }
 
 function submitTts(data) {
-	var ttsUrl = externalApis().googleTtsApi;
-	var queryParams = extend({
+	const ttsUrl = externalApis().googleTtsApi;
+	const queryParams = extend({
 		ie: 'UTF-8',
 		total: 1,
 		idx: 0,
 		client: 't'
 	}, data);
 
-	var fullUrl = ttsUrl + '?' + querystring.stringify(queryParams);
+	const fullUrl = ttsUrl + '?' + querystring.stringify(queryParams);
 
 	console.info(fullUrl);
 
-	var options = {
-	  url: fullUrl,
-	  headers: {
-	    'Referer': fullUrl
-	  }
+	const options = {
+		url: fullUrl,
+		headers: {
+			'Referer': fullUrl
+		}
 	};
 
 	return request(options);
@@ -105,7 +105,7 @@ function translate(requestData) {
 	}
 
 	if (killFeature()) {
-		return rejectWithError('Google detected too many requests submitted from this IP. service is temporarily unavailable.' + 
+		return rejectWithError('Google detected too many requests submitted from this IP. service is temporarily unavailable.' +
 			'\nViolation detected at: ' + lastGoogleRateLimitError.toString() + '.' +
 			'.\nTrying again in ' + (4 - (new Date() - lastGoogleRateLimitError) / 1000 / 60 / 60) + ' hours.');
 	}
@@ -119,14 +119,14 @@ function translate(requestData) {
 		};
 	}
 
-	var isMultipleQuery = !!requestData.targetLangs;
+	const isMultipleQuery = !!requestData.targetLangs;
 
-	var query = requestData.query;
-	var sourceLang = requestData.sourceLang;
-	var targetLangs = requestData.targetLangs || [requestData.targetLang];
-	var tk = tkCalc(query, tkk);
+	const query = requestData.query;
+	const sourceLang = requestData.sourceLang;
+	const targetLangs = requestData.targetLangs || [requestData.targetLang];
+	const tk = tkCalc(query, tkk);
 
-	var queries = targetLangs.map(tl => {
+	const queries = targetLangs.map(tl => {
 		return {
 			q: query,
 			sl: sourceLang,
@@ -135,14 +135,14 @@ function translate(requestData) {
 		};
 	});
 
-	var promises = queries.map(submitTranslation);
-	
-	var responsePromise = q.all(promises)
+	const promises = queries.map(submitTranslation);
+
+	const responsePromise = q.all(promises)
 		.then(function (stringResponses) {
-        	var jsonsData = stringResponses.map(googleResponseProcessor);
-        	console.log(jsonsData.map(x => x.extract.translation));
-        	return isMultipleQuery ? jsonsData : jsonsData[0];
-      });
+			const jsonsData = stringResponses.map(googleResponseProcessor);
+			console.log(jsonsData.map(x => x.extract.translation));
+			return isMultipleQuery ? jsonsData : jsonsData[0];
+		});
 
 	return {
 		type: 'PROMISE/TEXT',
@@ -156,7 +156,7 @@ function killFeature() {
 }
 
 function lessThanFourHoursAgo(time) {
-	var FOUR_HOURS = 4 * 60 * 60 * 1000;
+	const FOUR_HOURS = 4 * 60 * 60 * 1000;
 	return ((new Date()) - time) < FOUR_HOURS;
 }
 
@@ -165,7 +165,7 @@ function tts(requestData) {
 	    return rejectWithError(NOT_INITIALIZED_MESSAGE);
 	  }
 
-	var submitData = {
+	const submitData = {
 		q: requestData.query,	//	encodeURIComponent?
 		tl: requestData.targetLang || requestData.language,
 		textlen: requestData.query.length,
@@ -182,23 +182,26 @@ function tts(requestData) {
 function refreshTkk() {
 	return tkkScraper.run()
 		.then(newTkk => {
-			console.log('Key retrieved ' + newTkk);
+			if (newTkk === null) {
+				console.log(`TKK not present in page`);
+			} else {
+				console.log(`Key retrieved [${newTkk}]`);
+				const oldTkk = tkk;
+				tkk = newTkk;
 
-			var oldTkk = tkk;
-			tkk = newTkk;
-
-			if (oldTkk !== newTkk) {
-				return usageStatisticsDao.addTkk(newTkk);
+				if (oldTkk !== newTkk) {
+					return usageStatisticsDao.addTkk(newTkk);
+				}
 			}
 		});
 }
 
 function loadLanguages() {
-    return fs.readFile('json/languages.json', 'utf8')
-    .then(data => {
-      	languagesList = JSON.parse(data);
-      	console.log('Loaded ' + languagesList.length + ' languages');
-    });
+	return fs.readFile('json/languages.json', 'utf8')
+		.then(data => {
+			languagesList = JSON.parse(data);
+			console.log('Loaded ' + languagesList.length + ' languages');
+		});
 }
 
 function isReady() { return tkk !== null && languagesList !== null; }
@@ -207,7 +210,7 @@ function initServer() {
 	usageStatisticsDao.getLastTkk()
 		.then((lastTkk) => {
 			if (tkk === null) {
-				console.log(`Pre-loaeded last TKK: ${lastTkk}`);
+				console.log(`Pre-loaded last TKK: ${lastTkk}`);
 				tkk = lastTkk;
 			}
 		});
@@ -243,8 +246,8 @@ function getLanguagesList() {
 }
 
 function resolveWithData(data) {
-    var deferred = q.defer();
-    deferred.resolve(data);
+	const deferred = q.defer();
+	deferred.resolve(data);
     return deferred.promise;
 }
 

@@ -26,8 +26,8 @@ describe('TTS tests', () => {
 		return getLanguages()
 			.then((response) => {
 				const langsJson = response;
-				assert.equal(langsJson.length, 104);
-				assert.equal(langsJson[0].code, 'af');
+				assert.strictEqual(langsJson.length, 104);
+				assert.strictEqual(langsJson[0].code, 'af');
 			});
 	});
 
@@ -39,7 +39,7 @@ describe('TTS tests', () => {
 
 		return sendTts(ttsQuery)
 			.then((response) => {
-				assert.equal(response.data.length, 3862);
+				assert.strictEqual(response.data.length, 3868);
 			});
 	});
 
@@ -52,7 +52,7 @@ describe('TTS tests', () => {
 
 		return translate(translateQuery)
 			.then((response) => {
-				assert.equal(response.extract.translation, 'chien');
+				assert.strictEqual(response.extract.translation, 'chien');
 			});
 	});
 
@@ -66,7 +66,7 @@ describe('TTS tests', () => {
 
 		return translate(translateQuery)
 			.catch(response => {
-				assert.equal(response.data.error, 'Maximum supported query length is currently 800. Longer queries will be supported soon (query must be sent to Google as form data)');
+				assert.strictEqual(response.data.error, 'Maximum supported query length is currently 800. Longer queries will be supported soon (query must be sent to Google as form data)');
 			});
 	})
 });

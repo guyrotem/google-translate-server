@@ -1,19 +1,20 @@
-var fs = require('fs');
+const fs = require('fs');
 
 function loadDotEnv(envFilePath) {
   try {
     if (!fs.existsSync(envFilePath || '.env')) {
-      throw Error('no env file');
+      console.error('no env file');
+    } else {
+      const fileData = fs.readFileSync(envFilePath || '.env', { encoding: 'UTF-8' });
+      const parsedObj = parse(fileData);
+
+      console.log('loading values from .env file:');
+      console.log(parsedObj);
+
+      Object.keys(parsedObj).forEach(function (key) {
+        process.env[key] = process.env[key] || parsedObj[key];
+      });
     }
-    var fileData = fs.readFileSync(envFilePath || '.env', { encoding: 'UTF-8' });
-  	var parsedObj = parse(fileData);
-
-    console.log('loading values from .env file:');
-    console.log(parsedObj);
-
-    Object.keys(parsedObj).forEach(function (key) {
-      process.env[key] = process.env[key] || parsedObj[key];
-    });
   } catch (e) {
     console.log('.env file not loaded!');
   }

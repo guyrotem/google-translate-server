@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.2",
     "copy": "^0.3.0",
@@ -20,9 +20,9 @@
   },
   "description": "GT4",
   "devDependencies": {
-    "eslint": "^2.5.3",
-    "nyc": "^14.0.0",
-    "mocha": "^6.1.4"
+    "eslint": "^7.17.0",
+    "mocha": "^6.1.4",
+    "nyc": "^14.0.0"
   },
   "engines": {
     "node": "8.9.0"
@@ -36,7 +36,7 @@
   "readme": "Readme.md",
   "scripts": {
     "simulation": "node test/start-mock.js",
-    "lint": "eslint lib/ *.js test/ && echo Lint passed.",
+    "lint": "eslint scripts/ *.js test/ && echo Lint passed.",
     "test": "npm run lint && npm run test-ci",
     "test-browser": "node test/browser/start.js",
     "test-ci": "mocha test/spec/*.js",

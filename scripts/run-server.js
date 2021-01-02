@@ -11,7 +11,7 @@ const app = express();
 function startServer() {
 	const port = process.env.PORT;
 
-	//var jsonParser = bodyParser.json();
+	// const jsonParser = bodyParser.json();
 	//app.use(bodyParser.json());
 
 	//	TODO: use express...
@@ -42,12 +42,15 @@ function startServer() {
 //	TODO: replace it with express
 function requestHandler(request, response) {
 	try {
-  		if (request.method === 'POST') {
+		if (!request.secure) {
+			console.warn('Request is not secure!');
+		}
+		if (request.method === 'POST') {
 			getPostPayload(request)
 				.then(dataAsString => {
-					var url = request.url;
-					var data = JSON.parse(dataAsString);
-					var dispatcherResult = serverDispatcher.request(url, data);
+					const url = request.url;
+					const data = JSON.parse(dataAsString);
+					const dispatcherResult = serverDispatcher.request(url, data);
 
 					handleDispatcherResult(
 						request,
@@ -56,9 +59,9 @@ function requestHandler(request, response) {
 					);
 				});
 		} else if (request.method === 'GET') {
-			var url = request.url.split('?')[0];
-			var data = urlModule.parse(request.url, true).query;
-			var dispatcherResult = serverDispatcher.request(url, data);
+			const url = request.url.split('?')[0];
+			const data = urlModule.parse(request.url, true).query;
+			const dispatcherResult = serverDispatcher.request(url, data);
 
 			handleDispatcherResult(
 				request,
@@ -76,9 +79,9 @@ function requestHandler(request, response) {
 function handleDispatcherResult(request, response, dispatcherResult) {
 	console.info('Result type: ' + dispatcherResult.type);
 
-	var action = dispatcherResult.type;
-	var data = dispatcherResult.data;
-	var contentType = dispatcherResult.contentType || 'application/json';
+	const action = dispatcherResult.type;
+	const data = dispatcherResult.data;
+	const contentType = dispatcherResult.contentType || 'application/json';
 
 	if (action === 'PROXY') {
 		request
@@ -86,7 +89,7 @@ function handleDispatcherResult(request, response, dispatcherResult) {
 			.pipe(response);
 
 	} else if (action === 'PROMISE/TEXT') {
-		var header = {'Content-Type': contentType};
+		const header = { 'Content-Type': contentType };
 
 		data
 			.then(responseData => {
@@ -102,8 +105,8 @@ function handleDispatcherResult(request, response, dispatcherResult) {
 }
 
 function rejectOnError(response, additionalData) {
-  var errorMessage = additionalData || 'Unknown Error';
-  console.error(errorMessage);
+	const errorMessage = additionalData || 'Unknown Error';
+	console.error(errorMessage);
 
   response.writeHead(503, {'Content-Type': 'application/json'});
   response.end(JSON.stringify({error: errorMessage}));
