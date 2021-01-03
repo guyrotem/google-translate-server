@@ -1,7 +1,4 @@
-var q = require('q');
-var fs = require('fs');
-
-var env = require('./environment');
+const env = require('./environment');
 
 env.copyTopology()
 	.then(env.start)

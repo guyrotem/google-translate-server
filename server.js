@@ -1,5 +1,5 @@
-var server = require('./scripts/run-server');
-var setProductionTopology = require('./set-production-topology');
+const server = require('./scripts/run-server');
+const setProductionTopology = require('./set-production-topology');
 
 require('./scripts/load-dot-env')();
 

@@ -1,24 +1,24 @@
-var http = require('http');
-var q = require('q');
-var url = require('url');
-var fs = require('fs-promise');
+const http = require('http');
+const q = require('q');
+const url = require('url');
+const fs = require('fs');
 
-var answers = [];
-var server;
+const answers = [];
+let server;
 
 function requestHandler(request, response) {
 
-	var query = url.parse(request.url, true).query;
+	const query = url.parse(request.url, true).query;
 	console.log(query);
 
-	var result = answers.find(function (ans) {
+	const result = answers.find(function (ans) {
 		return ans.q === query.q
-		&& ans.tl === query.tl
-		&& ans.tk === query.tk;
+			&& ans.tl === query.tl
+			&& ans.tk === query.tk;
 	});
 
 	if (result) {
-		fs.readFile('test/' + result.audio)
+		fs.promises.readFile('test/' + result.audio)
 			.then(audioData => {
 				response.writeHead(200, {'Content-Type': 'audio/mpeg', 'alt-svc': 'quic=":443"; ma=2592000; v="36,35,34,33,32"'});
 				response.end(audioData, 'binary');
@@ -35,17 +35,17 @@ function requestHandler(request, response) {
 
 function addEntry(query, language, audio, tk) {
 	answers.push(
-	{
-		q: query,
-		tl: language,
-		audio: audio,
-		tk: tk
-	}
-		);
+		{
+			q: query,
+			tl: language,
+			audio: audio,
+			tk: tk
+		}
+	);
 }
 
 function startTtsServer(port) {
-	var deferred = q.defer();
+	const deferred = q.defer();
 	server = http.createServer(requestHandler);
 
 	server.listen(port, function () {
@@ -56,7 +56,7 @@ function startTtsServer(port) {
 }
 
 function stopServer() {
-	var deferred = q.defer();
+	const deferred = q.defer();
 
 	server.close(() => {
 		deferred.resolve();

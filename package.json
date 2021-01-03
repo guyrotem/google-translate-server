@@ -3,10 +3,8 @@
     "axios": "^0.21.1",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.2",
-    "copy": "^0.3.0",
     "express": "^4.14.0",
     "extend": "^3.0.0",
-    "fs-promise": "^0.5.0",
     "passport": "^0.3.2",
     "pg": "~7.0.0",
     "phantom": "^2.1.21",
@@ -25,15 +23,15 @@
     "nyc": "^14.0.0"
   },
   "engines": {
-    "node": "12.19.0"
+    "node": "14.15.3"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/guyrotem/google-translate-server.git"
   },
-  "main": "scripts/server.js",
+  "main": "server.js",
   "name": "google-translate-api",
-  "readme": "Readme.md",
+  "readme": "README.md",
   "scripts": {
     "simulation": "node test/start-mock.js",
     "lint": "eslint scripts/ test/ && echo Lint passed.",

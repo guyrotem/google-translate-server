@@ -2,7 +2,7 @@ const request = require('request');
 const requestPromise = require('request-promise');
 const querystring = require('querystring');
 const extend = require('extend');
-const fs = require('fs-promise');
+const fs = require('fs');
 const q = require('q');
 
 const tkCalc = require('./../hash/tk-hash');
@@ -197,7 +197,7 @@ function refreshTkk() {
 }
 
 function loadLanguages() {
-	return fs.readFile('json/languages.json', 'utf8')
+	return fs.promises.readFile('json/languages.json', 'utf8')
 		.then(data => {
 			languagesList = JSON.parse(data);
 			console.log('Loaded ' + languagesList.length + ' languages');
